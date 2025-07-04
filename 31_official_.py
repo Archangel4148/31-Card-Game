@@ -1,8 +1,8 @@
-#31 Card Game Program
-#Written by Joshua Santy, 7/6/2022
+# 31 Card Game Program
+# Written by Joshua Santy, 7/6/2022
 
-#This code assumes that the first person to go directly after being dealt cards knocks.
-#You can still use this if you want to knock in the first round even if you aren't the first person to go
+# This code assumes that the first person to go directly after being dealt cards knocks.
+# You can still use this if you want to knock in the first round even if you aren't the first person to go
 
 
 '''
@@ -20,8 +20,7 @@ TO USE THIS CODE:
 11. Thanks!
 '''
 
-
-#What this code understands and and its strategy:
+# What this code understands and and its strategy:
 '''
 This code assumes that if there is any positive point differential available, 
     the player will take it and not risk drawing from the deck for a possibly higher score
@@ -32,834 +31,968 @@ This code will drop the lowest card that doesn't contribute to the score,
 This code also understands that three of a kind means a score of 30.5
 '''
 
+import math
+import random
 
 
+def increment_with_discard_draw():
+    global player_hand_idx, current_player_idx, current_player, upcard_index
+    scores[current_player_idx] = hand_value
+    player_hand_idx = (3 * current_player)
+    current_player += 1
+    current_player_idx += 1
 
 
-import random, math
+def increment_with_deck_draw():
+    global player_hand_idx, current_player_idx, current_player, upcard_index
+    scores[current_player_idx] = hand_value
+    player_hand_idx = (3 * current_player)
+    current_player += 1
+    current_player_idx += 1
+    # Increment the deck index (Because a card was drawn from the deck)
+    upcard_index += 1
 
-def setup1():
-    global e, x, v, o
-    scores[x] = total
-    e = (3*v)
-    v += 1
-    x += 1
-    
-def setup2():
-    global e, x, v, o
-    scores[x] = total
-    e = (3*v)
-    v += 1
-    o += 1
-    x += 1
-    
 
-def drawcard1(): #add 3 of a kind
-    #if newcard doesn't match suit with any card:
-    global upcardsuit, upcardnum, total
-    if (deck[-o - 1][1]) != deck[e][1] and (deck[-o - 1][1]) != deck[e+1][1] and (deck[-o - 1][1]) != deck[e+2][1]:
-        total = max(deck[e][0], deck[e+1][0], deck[e+2][0], (deck[-o - 1][0]))
-        upcardnum = min(deck[e][0], deck[e+1][0], deck[e+2][0], (deck[-o - 1][0]))
-        if upcardnum == deck[e][0]:
-            upcardsuit = deck[e][1]
-            setup2()
-        elif upcardnum == deck[e+1][0]:
-            upcardsuit = deck[e+1][1]
-            setup2()
-        elif upcardnum == deck[e+2][0]:
-            upcardsuit = deck[e+2][1]
-            setup2()
-        else:
-            upcardsuit = deck[-o - 1][1]
-            setup2()
+def draw_card_no_shared_suits():  # add 3 of a kind
+    global upcard_suit, upcard_value, hand_value
 
-    #if newcard matches suit with card 1:
-    elif (deck[-o - 1][1]) == deck[e][1]:
-        #if newcard and card 1 combined aren't max or even:
-        if ((deck[-o - 1][0]) + deck[e][0]) <= max(deck[e+1][0], deck[e+2][0]):
-            total = max(deck[e+1][0], deck[e+2][0])
-            upcardnum = min(deck[e+1][0], deck[e+2][0],(deck[-o - 1][0]), deck[e][0])
-            if upcardnum == deck[e][0]:
-                upcardsuit = deck[e][1]
-                setup2()
-            elif upcardnum == deck[e+1][0]:
-                upcardsuit = deck[e+1][1]
-                setup2()
-            elif upcardnum == deck[e+2][0]:
-                upcardsuit = deck[e+2][1]
-                setup2()
+    hand_card_values = [deck[player_hand_idx][0], deck[player_hand_idx + 1][0], deck[player_hand_idx + 2][0],
+                        deck[-upcard_index - 1][0]]
+
+    # If the drawn card matches suit with card 1:
+    if (deck[-upcard_index - 1][1]) == deck[player_hand_idx][1]:
+        # If the drawn card and card 1 combined aren't the highest value (or tied for highest):
+        if (deck[-upcard_index - 1][0] + deck[player_hand_idx][0]) > max(hand_card_values):
+            hand_value = (deck[-upcard_index - 1][0]) + (deck[player_hand_idx][0])
+            # Discard the lowest of the two non-matching cards
+            upcard_value = min(deck[player_hand_idx + 1][0], deck[player_hand_idx + 2][0])
+            if upcard_value == deck[player_hand_idx + 1][0]:
+                upcard_suit = deck[player_hand_idx + 1][1]
             else:
-                upcardsuit = deck[-o-1][1]
-                setup2()
-            
-        #if newcard and card 1 combined are max:
-        else:             
-            total = (deck[-o - 1][0]) + (deck[e][0]) 
-            upcardnum = min(deck[e+1][0], deck[e+2][0])
-            if upcardnum == deck[e+1][0]:
-                upcardsuit = deck[e+1][1]
-                setup2()
-            else:
-                upcardsuit = deck[e+2][1]
-                setup2()
+                upcard_suit = deck[player_hand_idx + 2][1]
 
-    #if newcard matches suit with card 2: 
-    elif (deck[-o - 1][1]) == deck[e+1][1]:
-        #if newcard and card 2 combined aren't max or even:
-        if ((deck[-o - 1][0]) + deck[e+1][0]) <= max(deck[e][0], deck[e+2][0]):
-            total = max(deck[e][0], deck[e+2][0])
-            upcardnum = min(deck[e+1][0], deck[e+2][0],(deck[-o - 1][0]), deck[e][0])
-            if upcardnum == deck[e][0]:
-                upcardsuit = deck[e][1]
-                setup2()
-            elif upcardnum == deck[e+1][0]:
-                upcardsuit = deck[e+1][1]
-                setup2()
-            elif upcardnum == deck[e+2][0]:
-                upcardsuit = deck[e+2][1]
-                setup2()
+    # If the drawn card matches suit with card 2:
+    elif (deck[-upcard_index - 1][1]) == deck[player_hand_idx + 1][1]:
+        # If the drawn card and card 2 combined are the maximum value:
+        if ((deck[-upcard_index - 1][0]) + deck[player_hand_idx + 1][0]) > max(hand_card_values):
+            hand_value = (deck[-upcard_index - 1][0]) + (deck[player_hand_idx + 1][0])
+            # Discard the lowest of the two non-matching cards
+            upcard_value = min(deck[player_hand_idx][0], deck[player_hand_idx + 2][0])
+            if upcard_value == deck[player_hand_idx][0]:
+                upcard_suit = deck[player_hand_idx][1]
             else:
-                upcardsuit = deck[-o-1][1]
-                setup2()
-        #if newcard and card 2 combined are max:
-        else:             
-            total = (deck[-o - 1][0]) + (deck[e+1][0]) 
-            upcardnum = min(deck[e][0], deck[e+2][0])
-            if upcardnum == deck[e][0]:
-                upcardsuit = deck[e][1]
-                setup2()
-            else:
-                upcardsuit = deck[e+2][1]
-                setup2()
+                upcard_suit = deck[player_hand_idx + 2][1]
 
-    #if newcard matches suit with card 3: 
-    elif (deck[-o - 1][1]) == deck[e+2][1]:
-        #if newcard and card 3 combined aren't max or even:
-        if ((deck[-o - 1][0]) + deck[e+2][0]) <= max(deck[e+1][0], deck[e][0]):
-            total = max(deck[e+1][0], deck[e][0])
-            upcardnum = min(deck[e+1][0], deck[e+2][0],(deck[-o - 1][0]), deck[e][0])
-            if upcardnum == deck[e][0]:
-                upcardsuit = deck[e][1]
-                setup2()
-            elif upcardnum == deck[e+1][0]:
-                upcardsuit = deck[e+1][1]
-                setup2()
-            elif upcardnum == deck[e+2][0]:
-                upcardsuit = deck[e+2][1]
-                setup2()
+    # If the drawn card matches suit with card 3:
+    elif (deck[-upcard_index - 1][1]) == deck[player_hand_idx + 2][1]:
+        # If the drawn card and card 3 combined are the maximum value:
+        if ((deck[-upcard_index - 1][0]) + deck[player_hand_idx + 2][0]) > max(hand_card_values):
+            hand_value = (deck[-upcard_index - 1][0]) + (deck[player_hand_idx + 2][0])
+            # Discard the lowest of the two non-matching cards
+            upcard_value = min(deck[player_hand_idx + 1][0], deck[player_hand_idx][0])
+            if upcard_value == deck[player_hand_idx + 1][0]:
+                upcard_suit = deck[player_hand_idx + 1][1]
             else:
-                upcardsuit = deck[-o-1][1]
-                setup2()
-        #if newcard and card 3 combined are max:
-        else:             
-            total = (deck[-o - 1][0]) + (deck[e+2][0]) 
-            upcardnum = min(deck[e+1][0], deck[e][0])
-            if upcardnum == deck[e+1][0]:
-                upcardsuit = deck[e+1][1]
-                setup2()
-            else:
-                upcardsuit = deck[e][1]
-                setup2()
-def drawcard2():
-    global upcardsuit, upcardnum, total
-    #if newcard shares no suits:
-    if deck[-o - 1][1] != deck[e][1] and deck[-o - 1][1] != deck[e+2][1]:
-        total = max(deck[-o - 1][0], deck[e][0] + deck[e+1][0], deck[e+2][0])
-        if deck[-o - 1][0] ==  min(deck[-o - 1][0], deck[e][0] + deck[e+1][0], deck[e+2][0]):
-            upcardnum = deck[-o - 1][0]
-            upcardsuit = deck[-o - 1][1]
-            setup2()
-        elif deck[e+2][0] == min(deck[-o - 1][0], deck[e][0] + deck[e+1][0], deck[e+2][0]):
-            upcardnum = deck[e+2][0]
-            upcardsuit = deck[e+2][1]
-            setup2()
-        else: 
-            if deck[e][0] < deck[e+1][0]:
-                upcardnum = deck[e][0]
-                upcardsuit = deck[e][1]
-                setup2()
-            else:
-                upcardnum = deck[e+1][0]
-                upcardsuit = deck[e+1][1]
-                setup2()
+                upcard_suit = deck[player_hand_idx][1]
 
-    #if newcard shares a suit with the 3rd card:
-    elif deck[-o - 1][1] == deck[e+2][1]:
-        total = max(deck[-o - 1][0] + deck[e+2][0], deck[e][0] + deck[e+1][0])
-        if deck[-o - 1][0] + deck[e+2][0] > deck[e][0] + deck[e+1][0]:
-            upcardnum = min(deck[e][0], deck[e+1][0])
-            if upcardnum == deck[e][0]:
-                upcardsuit = deck[e][1]
-                setup2()
-            else:
-                upcardsuit = deck[e+1][1]
-                setup2()
-        elif deck[-o - 1][0] + deck[e+2][0] < deck[e][0] + deck[e+1][0]:
-            upcardnum = min(deck[-o - 1][0], deck[e+2][0])
-            if upcardnum == deck[e+2][0]:
-                upcardsuit = deck[e+2][1]
-                setup2()
-            else:
-                upcardsuit = deck[-o - 1][1]
-                setup2()
-        else:
-            upcardnum = min(deck[-o - 1][0], deck[e+2][0], deck[e][0], deck[e+1][0])
-            if upcardnum == deck[e][0]:
-                upcardsuit = deck[e][1]
-                setup2()
-            elif upcardnum == deck[e+1][0]:
-                upcardsuit = deck[e+1][1]
-                setup2()
-            elif upcardnum == deck[e+2][0]:
-                upcardsuit = deck[e+2][1]
-                setup2()
-            else:
-                upcardsuit = deck[-o - 1][1]
-                setup2()                 
-
-    #if newcard shares a suit with cards 1 & 2:
+    # If the card matches no suits, or if the combination isn't the maximum value:
     else:
-        total = max(deck[-o - 1][0] + deck[e][0] + deck[e+1][0], deck[e+2][0])
-        if deck[-o - 1][0] + deck[e][0] + deck[e+1][0] > deck[e+2][0]:
-            upcardnum = deck[e+2][0]
-            upcardsuit = deck[e+2][1]
-            setup2()
+        hand_value = max(hand_card_values)
+        # Discard the lowest card
+        upcard_value = min(hand_card_values)
+        if upcard_value == deck[player_hand_idx][0]:
+            upcard_suit = deck[player_hand_idx][1]
+        elif upcard_value == deck[player_hand_idx + 1][0]:
+            upcard_suit = deck[player_hand_idx + 1][1]
+        elif upcard_value == deck[player_hand_idx + 2][0]:
+            upcard_suit = deck[player_hand_idx + 2][1]
         else:
-            upcardnum = min(deck[-o - 1][0], deck[e][0], deck[e+1][0])
-            if upcardnum == deck[-o - 1][0]:
-                upcardsuit = deck[-o - 1][1]
-                setup2()
-            elif upcardnum == deck[e][0]:
-                upcardsuit == deck[e][1]
-                setup2()
-            else:
-                upcardsuit = deck[e+1][1]
-                setup2()
+            upcard_suit = deck[-upcard_index - 1][1]
 
-def drawcard3():
-    global upcardsuit, upcardnum, total
-    #if newcard shares no suits:
-    if deck[-o - 1][1] != deck[e+1][1] and deck[-o - 1][1] != deck[e+2][1]:
-        total = max(deck[-o - 1][0], deck[e][0] + deck[e+2][0], deck[e+1][0])
-        if deck[-o - 1][0] ==  min(deck[-o - 1][0], deck[e+2][0] + deck[e][0], deck[e+1][0]):
-            upcardnum = deck[-o - 1][0]
-            upcardsuit = deck[-o - 1][1]
-            setup2()
-        elif deck[e+1][0] == min(deck[-o - 1][0], deck[e][0] + deck[e+2][0], deck[e+1][0]):
-            upcardnum = deck[e+1][0]
-            upcardsuit = deck[e+1][1]
-            setup2()
-        else: 
-            if deck[e][0] < deck[e+2][0]:
-                upcardnum = deck[e][0]
-                upcardsuit = deck[e][1]
-                setup2()
-            else:
-                upcardnum = deck[e+2][0]
-                upcardsuit = deck[e+2][1]
-                setup2()
+    # Increment the turn variables, and move on to the next player
+    increment_with_deck_draw()
 
-    #if newcard shares a suit with the 2nd card:
-    elif deck[-o - 1][1] == deck[e+1][1]:
-        total = max(deck[-o - 1][0] + deck[e+1][0], deck[e][0] + deck[e+2][0])
-        if deck[-o - 1][0] + deck[e+1][0] > deck[e][0] + deck[e+2][0]:
-            upcardnum = min(deck[e][0], deck[e+2][0])
-            if upcardnum == deck[e][0]:
-                upcardsuit = deck[e][1]
-                setup2()
-            else:
-                upcardsuit = deck[e+2][1]
-                setup2()
-        elif deck[-o - 1][0] + deck[e+1][0] < deck[e][0] + deck[e+2][0]:
-            upcardnum = min(deck[-o - 1][0], deck[e+1][0])
-            if upcardnum == deck[e+1][0]:
-                upcardsuit = deck[e+1][1]
-                setup2()
-            else:
-                upcardsuit = deck[-o - 1][1]
-                setup2()
+
+def draw_card_1_2_share_suits():
+    global upcard_suit, upcard_value, hand_value
+
+    value_groups = [deck[-upcard_index - 1][0], deck[player_hand_idx][0] + deck[player_hand_idx + 1][0],
+                    deck[player_hand_idx + 2][0]]
+
+    # If the drawn card shares no suits:
+    if deck[-upcard_index - 1][1] != deck[player_hand_idx][1] and deck[-upcard_index - 1][1] != \
+            deck[player_hand_idx + 2][1]:
+        hand_value = max(value_groups)
+        if deck[-upcard_index - 1][0] == min(value_groups):
+            # Discard the drawn card
+            upcard_value = deck[-upcard_index - 1][0]
+            upcard_suit = deck[-upcard_index - 1][1]
+        elif deck[player_hand_idx + 2][0] == min(value_groups):
+            # Discard card 3
+            upcard_value = deck[player_hand_idx + 2][0]
+            upcard_suit = deck[player_hand_idx + 2][1]
         else:
-            upcardnum = min(deck[-o - 1][0], deck[e+1][0], deck[e][0], deck[e+2][0])
-            if upcardnum == deck[e][0]:
-                upcardsuit = deck[e][1]
-                setup2()
-            elif upcardnum == deck[e+1][0]:
-                upcardsuit = deck[e+1][1]
-                setup2()
-            elif upcardnum == deck[e+2][0]:
-                upcardsuit = deck[e+2][1]
-                setup2()
+            # Discard the lowest of the matching cards
+            if deck[player_hand_idx][0] < deck[player_hand_idx + 1][0]:
+                # Discard card 1
+                upcard_value = deck[player_hand_idx][0]
+                upcard_suit = deck[player_hand_idx][1]
             else:
-                upcardsuit = deck[-o - 1][1]
-                setup2()                 
+                # Discard card 2
+                upcard_value = deck[player_hand_idx + 1][0]
+                upcard_suit = deck[player_hand_idx + 1][1]
 
-    #if newcard shares a suit with cards 1 & 3:
+    # If the drawn card shares a suit with card 3:
+    elif deck[-upcard_index - 1][1] == deck[player_hand_idx + 2][1]:
+        hand_value = max(deck[-upcard_index - 1][0] + deck[player_hand_idx + 2][0],
+                         deck[player_hand_idx][0] + deck[player_hand_idx + 1][0])
+
+        # If the drawn card and card 3 combined are greater than cards 1 and 2 combined:
+        if deck[-upcard_index - 1][0] + deck[player_hand_idx + 2][0] > deck[player_hand_idx][0] + \
+                deck[player_hand_idx + 1][0]:
+            # Discard the lesser of cards 1 and 2
+            upcard_value = min(deck[player_hand_idx][0], deck[player_hand_idx + 1][0])
+            if upcard_value == deck[player_hand_idx][0]:
+                # Discard card 1
+                upcard_suit = deck[player_hand_idx][1]
+            else:
+                # Discard card 2
+                upcard_suit = deck[player_hand_idx + 1][1]
+
+        # If the drawn card and card 3 combined are less than cards 1 and 2 combined
+        elif deck[-upcard_index - 1][0] + deck[player_hand_idx + 2][0] < deck[player_hand_idx][0] + \
+                deck[player_hand_idx + 1][0]:
+            # Discard the lesser of the drawn card and card 3
+            upcard_value = min(deck[-upcard_index - 1][0], deck[player_hand_idx + 2][0])
+            if upcard_value == deck[player_hand_idx + 2][0]:
+                # Discard card 3
+                upcard_suit = deck[player_hand_idx + 2][1]
+            else:
+                # Discard the drawn card
+                upcard_suit = deck[-upcard_index - 1][1]
+
+        # If the combination of the drawn card and card 3 is equal to the combination of cards 1 and 2:
+        else:
+            # Discard the lowest card
+            upcard_value = min(deck[-upcard_index - 1][0], deck[player_hand_idx + 2][0], deck[player_hand_idx][0],
+                               deck[player_hand_idx + 1][0])
+            if upcard_value == deck[player_hand_idx][0]:
+                upcard_suit = deck[player_hand_idx][1]
+            elif upcard_value == deck[player_hand_idx + 1][0]:
+                upcard_suit = deck[player_hand_idx + 1][1]
+            elif upcard_value == deck[player_hand_idx + 2][0]:
+                upcard_suit = deck[player_hand_idx + 2][1]
+            else:
+                upcard_suit = deck[-upcard_index - 1][1]
+
+    # If the drawn card shares a suit with cards 1 and 2:
     else:
-        total = max(deck[-o - 1][0] + deck[e][0] + deck[e+2][0], deck[e+1][0])
-        if deck[-o - 1][0] + deck[e][0] + deck[e+2][0] > deck[e+1][0]:
-            upcardnum = deck[e+1][0]
-            upcardsuit = deck[e+1][1]
-            setup2()
+        hand_value = max(deck[-upcard_index - 1][0] + deck[player_hand_idx][0] + deck[player_hand_idx + 1][0],
+                         deck[player_hand_idx + 2][0])
+
+        # If the drawn card, card 1, and card 2 combined are greater than the value of card 3:
+        if deck[-upcard_index - 1][0] + deck[player_hand_idx][0] + deck[player_hand_idx + 1][0] > \
+                deck[player_hand_idx + 2][0]:
+            # Discard card 3
+            upcard_value = deck[player_hand_idx + 2][0]
+            upcard_suit = deck[player_hand_idx + 2][1]
+
+        # If the drawn card, card 1, and card 2 combined are NOT the maximum value:
         else:
-            upcardnum = min(deck[-o - 1][0], deck[e][0], deck[e+2][0])
-            if upcardnum == deck[-o - 1][0]:
-                upcardsuit = deck[-o - 1][1]
-                setup2()
-            elif upcardnum == deck[e][0]:
-                upcardsuit == deck[e][1]
-                setup2()
+            # Discard the least of cards 1, 2, and the drawn card
+            upcard_value = min(deck[-upcard_index - 1][0], deck[player_hand_idx][0], deck[player_hand_idx + 1][0])
+            if upcard_value == deck[-upcard_index - 1][0]:
+                # Discard the drawn card
+                upcard_suit = deck[-upcard_index - 1][1]
+            elif upcard_value == deck[player_hand_idx][0]:
+                # Discard card 1
+                upcard_suit = deck[player_hand_idx][1]
             else:
-                upcardsuit = deck[e+2][1]
-                setup2()
+                # Discard card 2
+                upcard_suit = deck[player_hand_idx + 1][1]
 
-def drawcard4():
-    global upcardsuit, upcardnum, total
-    #if newcard shares no suits:
-    if deck[-o - 1][1] != deck[e][1] and deck[-o - 1][1] != deck[e+2][1]:
-        total = max(deck[-o - 1][0], deck[e+1][0] + deck[e+2][0], deck[e][0])
-        if deck[-o - 1][0] ==  min(deck[-o - 1][0], deck[e+2][0] + deck[e+1][0], deck[e][0]):
-            upcardnum = deck[-o - 1][0]
-            upcardsuit = deck[-o - 1][1]
-            setup2()
-        elif deck[e][0] == min(deck[-o - 1][0], deck[e+1][0] + deck[e+2][0], deck[e][0]):
-            upcardnum = deck[e][0]
-            upcardsuit = deck[e][1]
-            setup2()
-        else: 
-            if deck[e+1][0] < deck[e+2][0]:
-                upcardnum = deck[e+1][0]
-                upcardsuit = deck[e+1][1]
-                setup2()
-            else:
-                upcardnum = deck[e+2][0]
-                upcardsuit = deck[e+2][1]
-                setup2()
+    # Increment the turn variables, and move on to the next player
+    increment_with_deck_draw()
 
-    #if newcard shares a suit with the 1st card:
-    elif deck[-o - 1][1] == deck[e][1]:
-        total = max(deck[-o - 1][0] + deck[e][0], deck[e+1][0] + deck[e+2][0])
-        if deck[-o - 1][0] + deck[e][0] > deck[e+1][0] + deck[e+2][0]:
-            upcardnum = min(deck[e+1][0], deck[e+2][0])
-            if upcardnum == deck[e+1][0]:
-                upcardsuit = deck[e+1][1]
-                setup2()
-            else:
-                upcardsuit = deck[e+2][1]
-                setup2()
-        elif deck[-o - 1][0] + deck[e][0] < deck[e+1][0] + deck[e+2][0]:
-            upcardnum = min(deck[-o - 1][0], deck[e][0])
-            if upcardnum == deck[e][0]:
-                upcardsuit = deck[e][1]
-                setup2()
-            else:
-                upcardsuit = deck[-o - 1][1]
-                setup2()
+
+def draw_card_1_3_share_suits():
+    global upcard_suit, upcard_value, hand_value
+
+    value_groups = [deck[-upcard_index - 1][0], deck[player_hand_idx][0] + deck[player_hand_idx + 2][0],
+                    deck[player_hand_idx + 1][0]]
+
+    # If the drawn card shares no suits:
+    if deck[-upcard_index - 1][1] != deck[player_hand_idx + 1][1] and deck[-upcard_index - 1][1] != \
+            deck[player_hand_idx + 2][1]:
+        hand_value = max(value_groups)
+
+        # If the drawn card is the minimum value:
+        if deck[-upcard_index - 1][0] == min(value_groups):
+            # Discard the drawn card
+            upcard_value = deck[-upcard_index - 1][0]
+            upcard_suit = deck[-upcard_index - 1][1]
+        # If card 2 is the minimum value:
+        elif deck[player_hand_idx + 1][0] == min(value_groups):
+            # Discard card 2
+            upcard_value = deck[player_hand_idx + 1][0]
+            upcard_suit = deck[player_hand_idx + 1][1]
+        # If cards 1 and 3 combined are the minimum value:
         else:
-            upcardnum = min(deck[-o - 1][0], deck[e+1][0], deck[e][0], deck[e+2][0])
-            if upcardnum == deck[e][0]:
-                upcardsuit = deck[e][1]
-                setup2()
-            elif upcardnum == deck[e+1][0]:
-                upcardsuit = deck[e+1][1]
-                setup2()
-            elif upcardnum == deck[e+2][0]:
-                upcardsuit = deck[e+2][1]
-                setup2()
+            # Discard the lesser of cards 1 and 3
+            if deck[player_hand_idx][0] < deck[player_hand_idx + 2][0]:
+                # Discard card 1
+                upcard_value = deck[player_hand_idx][0]
+                upcard_suit = deck[player_hand_idx][1]
             else:
-                upcardsuit = deck[-o - 1][1]
-                setup2()                 
+                # Discard card 3
+                upcard_value = deck[player_hand_idx + 2][0]
+                upcard_suit = deck[player_hand_idx + 2][1]
 
-    #if newcard shares a suit with cards 2 & 3:
+    # If the drawn card shares a suit with card 2:
+    elif deck[-upcard_index - 1][1] == deck[player_hand_idx + 1][1]:
+        hand_value = max(deck[-upcard_index - 1][0] + deck[player_hand_idx + 1][0],
+                         deck[player_hand_idx][0] + deck[player_hand_idx + 2][0])
+        # If the combination of the drawn card and card 2 is greater than the combination of cards 1 and 3:
+        if deck[-upcard_index - 1][0] + deck[player_hand_idx + 1][0] > deck[player_hand_idx][0] + \
+                deck[player_hand_idx + 2][0]:
+            # Discard the lesser of cards 1 and 3
+            upcard_value = min(deck[player_hand_idx][0], deck[player_hand_idx + 2][0])
+            if upcard_value == deck[player_hand_idx][0]:
+                # Discard card 1
+                upcard_suit = deck[player_hand_idx][1]
+            else:
+                # Discard card 3
+                upcard_suit = deck[player_hand_idx + 2][1]
+
+        # If the combination of the drawn card and card 2 is less than the combination of cards 1 and 3:
+        elif deck[-upcard_index - 1][0] + deck[player_hand_idx + 1][0] < deck[player_hand_idx][0] + \
+                deck[player_hand_idx + 2][0]:
+            # Discard the lesser of card 2 and the drawn card
+            upcard_value = min(deck[-upcard_index - 1][0], deck[player_hand_idx + 1][0])
+            if upcard_value == deck[player_hand_idx + 1][0]:
+                # Discard card 2
+                upcard_suit = deck[player_hand_idx + 1][1]
+            else:
+                # Discard the drawn card
+                upcard_suit = deck[-upcard_index - 1][1]
+
+        # If the combination of the drawn card and card 2 is equal to the combination of cards 1 and 3:
+        else:
+            # Discard the lowest card
+            upcard_value = min(deck[-upcard_index - 1][0], deck[player_hand_idx + 1][0], deck[player_hand_idx][0],
+                               deck[player_hand_idx + 2][0])
+            if upcard_value == deck[player_hand_idx][0]:
+                upcard_suit = deck[player_hand_idx][1]
+            elif upcard_value == deck[player_hand_idx + 1][0]:
+                upcard_suit = deck[player_hand_idx + 1][1]
+            elif upcard_value == deck[player_hand_idx + 2][0]:
+                upcard_suit = deck[player_hand_idx + 2][1]
+            else:
+                upcard_suit = deck[-upcard_index - 1][1]
+
+    # If the drawn card shares a suit with cards 1 and 3:
     else:
-        total = max(deck[-o - 1][0] + deck[e+1][0] + deck[e+2][0], deck[e][0])
-        if deck[-o - 1][0] + deck[e+1][0] + deck[e+2][0] > deck[e][0]:
-            upcardnum = deck[e][0]
-            upcardsuit = deck[e][1]
-            setup2()
+        hand_value = max(deck[-upcard_index - 1][0] + deck[player_hand_idx][0] + deck[player_hand_idx + 2][0],
+                         deck[player_hand_idx + 1][0])
+        # If the combination of cards 1, 3, and the drawn card is greater than the value of card 2:
+        if deck[-upcard_index - 1][0] + deck[player_hand_idx][0] + deck[player_hand_idx + 2][0] > \
+                deck[player_hand_idx + 1][0]:
+            # Discard card 2
+            upcard_value = deck[player_hand_idx + 1][0]
+            upcard_suit = deck[player_hand_idx + 1][1]
+
+        # If the combination of cards 1, 3, and the drawn card is less than the value of card 2:
         else:
-            upcardnum = min(deck[-o - 1][0], deck[e+1][0], deck[e+2][0])
-            if upcardnum == deck[-o - 1][0]:
-                upcardsuit = deck[-o - 1][1]
-                setup2()
-            elif upcardnum == deck[e+1][0]:
-                upcardsuit == deck[e+1][1]
-                setup2()
+            # Discard the least of cards 1, 3, and the drawn card
+            upcard_value = min(deck[-upcard_index - 1][0], deck[player_hand_idx][0], deck[player_hand_idx + 2][0])
+            if upcard_value == deck[-upcard_index - 1][0]:
+                # Discard the drawn card
+                upcard_suit = deck[-upcard_index - 1][1]
+            elif upcard_value == deck[player_hand_idx][0]:
+                # Discard card 1
+                upcard_suit = deck[player_hand_idx][1]
             else:
-                upcardsuit = deck[e+2][1]
-                setup2()
+                # Discard card 3
+                upcard_suit = deck[player_hand_idx + 2][1]
+
+    # Increment the turn variables, and move on to the next player
+    increment_with_deck_draw()
 
 
+def draw_card_2_3_share_suits():
+    global upcard_suit, upcard_value, hand_value
 
-num = int(input('Enter number of players: '))
+    value_groups = [deck[-upcard_index - 1][0], deck[player_hand_idx + 2][0] + deck[player_hand_idx + 1][0],
+                    deck[player_hand_idx][0]]
+
+    # If the drawn card shares no suits:
+    if deck[-upcard_index - 1][1] != deck[player_hand_idx][1] and deck[-upcard_index - 1][1] != \
+            deck[player_hand_idx + 2][1]:
+        hand_value = max(value_groups)
+        # If the drawn card is the lowest value:
+        if deck[-upcard_index - 1][0] == min(value_groups):
+            # Discard the drawn card
+            upcard_value = deck[-upcard_index - 1][0]
+            upcard_suit = deck[-upcard_index - 1][1]
+        # If card 1 is the lowest value:
+        elif deck[player_hand_idx][0] == min(value_groups):
+            # Discard card 1
+            upcard_value = deck[player_hand_idx][0]
+            upcard_suit = deck[player_hand_idx][1]
+        # If cards 2 and 3 combined are the lowest value:
+        else:
+            # Discard the lesser of cards 2 and 3
+            if deck[player_hand_idx + 1][0] < deck[player_hand_idx + 2][0]:
+                # Discard card 2
+                upcard_value = deck[player_hand_idx + 1][0]
+                upcard_suit = deck[player_hand_idx + 1][1]
+            else:
+                # Discard card 3
+                upcard_value = deck[player_hand_idx + 2][0]
+                upcard_suit = deck[player_hand_idx + 2][1]
+
+    # If the drawn card shares a suit with card 1:
+    elif deck[-upcard_index - 1][1] == deck[player_hand_idx][1]:
+        hand_value = max(deck[-upcard_index - 1][0] + deck[player_hand_idx][0],
+                         deck[player_hand_idx + 1][0] + deck[player_hand_idx + 2][0])
+
+        # If card 1 and the drawn card combined are greater than cards 2 and 3 combined:
+        if deck[-upcard_index - 1][0] + deck[player_hand_idx][0] > deck[player_hand_idx + 1][0] + \
+                deck[player_hand_idx + 2][0]:
+            # Discard the lesser of cards 2 and 3
+            upcard_value = min(deck[player_hand_idx + 1][0], deck[player_hand_idx + 2][0])
+            if upcard_value == deck[player_hand_idx + 1][0]:
+                # Discard card 2
+                upcard_suit = deck[player_hand_idx + 1][1]
+            else:
+                # Discard card 3
+                upcard_suit = deck[player_hand_idx + 2][1]
+
+        # If card 1 and the drawn card combined are less than cards 2 and 3 combined:
+        elif deck[-upcard_index - 1][0] + deck[player_hand_idx][0] < deck[player_hand_idx + 1][0] + \
+                deck[player_hand_idx + 2][0]:
+            # Discard the lesser of card 1 and the drawn card
+            upcard_value = min(deck[-upcard_index - 1][0], deck[player_hand_idx][0])
+            if upcard_value == deck[player_hand_idx][0]:
+                # Discard card 1
+                upcard_suit = deck[player_hand_idx][1]
+            else:
+                # Discard the drawn card
+                upcard_suit = deck[-upcard_index - 1][1]
+
+        # If card 1 and the drawn card combined are equal to cards 2 and 3 combined:
+        else:
+            # Discard the lowest card
+            upcard_value = min(deck[-upcard_index - 1][0], deck[player_hand_idx + 1][0], deck[player_hand_idx][0],
+                               deck[player_hand_idx + 2][0])
+            if upcard_value == deck[player_hand_idx][0]:
+                upcard_suit = deck[player_hand_idx][1]
+            elif upcard_value == deck[player_hand_idx + 1][0]:
+                upcard_suit = deck[player_hand_idx + 1][1]
+            elif upcard_value == deck[player_hand_idx + 2][0]:
+                upcard_suit = deck[player_hand_idx + 2][1]
+            else:
+                upcard_suit = deck[-upcard_index - 1][1]
+
+    # If the drawn card shares a suit with cards 2 and 3:
+    else:
+        hand_value = max(deck[-upcard_index - 1][0] + deck[player_hand_idx + 1][0] + deck[player_hand_idx + 2][0],
+                         deck[player_hand_idx][0])
+        # If cards 2, 3, and the drawn card combined are greater than the value of card 1:
+        if deck[-upcard_index - 1][0] + deck[player_hand_idx + 1][0] + deck[player_hand_idx + 2][0] > \
+                deck[player_hand_idx][0]:
+            # Discard card 1
+            upcard_value = deck[player_hand_idx][0]
+            upcard_suit = deck[player_hand_idx][1]
+
+        # If cards 2, 3, and the drawn card combined are less than or equal to the value of card 1:
+        else:
+            # Discard the least of cards 2, 3, and the drawn card
+            upcard_value = min(deck[-upcard_index - 1][0], deck[player_hand_idx + 1][0], deck[player_hand_idx + 2][0])
+            if upcard_value == deck[-upcard_index - 1][0]:
+                # Discard the drawn card
+                upcard_suit = deck[-upcard_index - 1][1]
+            elif upcard_value == deck[player_hand_idx + 1][0]:
+                # Discard card 2
+                upcard_suit = deck[player_hand_idx + 1][1]
+            else:
+                # Discard card 3
+                upcard_suit = deck[player_hand_idx + 2][1]
+
+    # Increment the turn variables, and move on to the next player
+    increment_with_deck_draw()
+
+
+player_count = int(input('Enter number of players: '))
 count = 0
 iterations = int(input('Enter number of iterations: '))
 all_total = 0
 total_scores = []
-while count < iterations:
-    # 1 =  number, 2 = 10, 3 = jack, 4 = queen, 5 = king, 6 = ace
-    deck = [(5, 'Club', 1), (10, 'Club', 2), (11, 'Diamond', 6), (10, 'Heart', 2),(6, 'Spade', 1), (3, 'Spade', 1), (10, 'Club', 3), (10, 'Spade', 2), (2, 'Spade', 1),(8, 'Spade', 1), (7, 'Club', 1), (3, 'Heart', 1), (4, 'Spade', 1), (11, 'Club', 6),(5, 'Diamond', 1), (10, 'Heart', 3), (10, 'Diamond', 2), (9, 'Spade', 1), (9, 'Club', 1),(6, 'Heart', 1), (4, 'Heart', 1), (10, 'Diamond', 3), (3, 'Diamond', 1), (6, 'Club', 1),(11, 'Heart', 6), (10, 'Spade', 3), (10, 'Diamond', 4), (10, 'Spade', 4), (5, 'Spade', 1),(7, 'Heart', 1), (6, 'Diamond', 1), (7, 'Diamond', 1), (4, 'Club', 1), (8, 'Heart', 1),(11, 'Spade', 6), (2, 'Club', 1), (3, 'Club', 1), (10, 'Heart', 4), (10, 'Club', 4),(8, 'Club', 1), (2, 'Heart', 1), (9, 'Diamond', 1), (7, 'Spade', 1), (2, 'Diamond', 1),(10, 'Spade', 5), (4, 'Diamond', 1), (10, 'Heart', 5), (9, 'Heart', 1), (8, 'Diamond', 1),(10, 'Club', 5), (5, 'Heart', 1), (10, 'Diamond', 5)]
-    deck = random.sample(deck, k=len(deck))
+for _ in range(iterations):
+    # Types: 1 = number, 2 = 10, 3 = jack, 4 = queen, 5 = king, 6 = ace
+    # Each item: (Card #, Suit, Type)
+    deck = [
+        (5, 'Club', 1), (10, 'Club', 2), (11, 'Diamond', 6), (10, 'Heart', 2), (6, 'Spade', 1), (3, 'Spade', 1),
+        (10, 'Club', 3), (10, 'Spade', 2), (2, 'Spade', 1), (8, 'Spade', 1), (7, 'Club', 1), (3, 'Heart', 1),
+        (4, 'Spade', 1), (11, 'Club', 6), (5, 'Diamond', 1), (10, 'Heart', 3), (10, 'Diamond', 2), (9, 'Spade', 1),
+        (9, 'Club', 1), (6, 'Heart', 1), (4, 'Heart', 1), (10, 'Diamond', 3), (3, 'Diamond', 1), (6, 'Club', 1),
+        (11, 'Heart', 6), (10, 'Spade', 3), (10, 'Diamond', 4), (10, 'Spade', 4), (5, 'Spade', 1), (7, 'Heart', 1),
+        (6, 'Diamond', 1), (7, 'Diamond', 1), (4, 'Club', 1), (8, 'Heart', 1), (11, 'Spade', 6), (2, 'Club', 1),
+        (3, 'Club', 1), (10, 'Heart', 4), (10, 'Club', 4), (8, 'Club', 1), (2, 'Heart', 1), (9, 'Diamond', 1),
+        (7, 'Spade', 1), (2, 'Diamond', 1), (10, 'Spade', 5), (4, 'Diamond', 1), (10, 'Heart', 5), (9, 'Heart', 1),
+        (8, 'Diamond', 1), (10, 'Club', 5), (5, 'Heart', 1), (10, 'Diamond', 5)
+    ]
+    deck = random.sample(deck, k=len(deck))  # Shuffle the deck
     scores = []
-    
-#first draw
-    e = 0
-    v = 1
 
-    while v <= num:
-        total = 0
-        #no matching suit:
-        if deck[e+1][1] != deck[e+2][1] and deck[e][1] != deck[e+1][1] and deck[e][1] != deck[e+2][1]:
-            total = max(deck[e][0], deck[e+1][0], deck[e+2][0])
-            
-        #all matching suit:
-        elif deck[e+1][1] == deck[e+2][1] and deck[e][1] == deck[e+1][1] and deck[e+1][1] == deck[e+2][1]:
-            total = deck[e][0] + deck[e+1][0] + deck[e+2][0]
+    # First player starts
+    player_hand_idx = 0
+    current_player = 1
 
-        #at least 1 matching suit:
+    # "Deal" a hand to each player and calculate their hand value(s)
+    while current_player <= player_count:
+        hand_value = 0
+        # No matching suits:
+        if (
+                deck[player_hand_idx + 1][1] != deck[player_hand_idx + 2][1]  # S2 != S3
+                and deck[player_hand_idx][1] != deck[player_hand_idx + 1][1]  # S1 != S2
+                and deck[player_hand_idx][1] != deck[player_hand_idx + 2][1]  # S1 != S3
+        ):
+            # Hand is worth the largest card's value
+            hand_value = max(deck[player_hand_idx][0], deck[player_hand_idx + 1][0], deck[player_hand_idx + 2][0])
+
+        # All matching suit:
+        elif (
+                deck[player_hand_idx + 1][1] == deck[player_hand_idx + 2][1]  # S2 = S3
+                and deck[player_hand_idx][1] == deck[player_hand_idx + 1][1]  # S1 = S2
+                and deck[player_hand_idx + 1][1] == deck[player_hand_idx + 2][1]  # S2 = S3
+        ):
+            # Hand is worth the sum of all card values
+            hand_value = deck[player_hand_idx][0] + deck[player_hand_idx + 1][0] + deck[player_hand_idx + 2][0]
+
+        # At least 1 matching suit:
         else:
-            if deck[e][1] == deck[e+1][1]:
-                total = max(deck[e][0] + deck[e+1][0], deck[e+2][0])
-            elif deck[e][1] == deck[e+2][1]:
-                total = max(deck[e][0] + deck[e+2][0], deck[e+1][0])
-            else:    
-                total = max(deck[e+1][0] + deck[e+2][0], deck[e][0])    
-        
-        scores.append(total)
-        total_scores.append(total)
-        #print(scores)
-        #print(deck[e][0],deck[e][1],deck[e+1][0],deck[e+1][1], deck[e+2][0],deck[e+2][1])
-        e = (3*v)
-        v += 1
-        
+            # Hand is worth the sum of the matching suits, or the largest single card (whichever is higher)
+            if deck[player_hand_idx][1] == deck[player_hand_idx + 1][1]:  # S1 = S2
+                # Either (H1 + H2) or H3
+                hand_value = max(deck[player_hand_idx][0] + deck[player_hand_idx + 1][0], deck[player_hand_idx + 2][0])
+            elif deck[player_hand_idx][1] == deck[player_hand_idx + 2][1]:
+                # Either (H1 + H3) or H2
+                hand_value = max(deck[player_hand_idx][0] + deck[player_hand_idx + 2][0], deck[player_hand_idx + 1][0])
+            else:
+                # Either (H2 + H3) or H1
+                hand_value = max(deck[player_hand_idx + 1][0] + deck[player_hand_idx + 2][0], deck[player_hand_idx][0])
 
-    #2nd draw, 1st player knocks:
+        # Hand value is now accurate, add it to the totals
+        scores.append(hand_value)
+        total_scores.append(hand_value)
 
-    e = 3
-    v = 2
-    o = 1
-    x = 1
-    upcardnum = deck[-o][0]
-    upcardsuit = deck[-o][1]
-    while v <= (num):
-        total = 0
-                
-#-------------------------------------------------------------------------------------------------------------------------------------------------------------------        
-        #all  3 same suit:
-        if deck[e+1][1] == deck[e+2][1] and deck[e][1] == deck[e+1][1] and deck[e+1][1] == deck[e+2][1]:
+        # Move on to the next player
+        player_hand_idx = (3 * current_player)
+        current_player += 1
 
-        #if upcard doesn't share the same suit:
-            if upcardsuit != deck[e][1]: 
-                #if upcard is greater than or equal to the sum of all 3 cards:
-                if upcardnum >= (deck[e][0] + deck[e+1][0] + deck[e+2][0]):
-                    total = upcardnum
-                    upcardnum = min(deck[e][0], deck[e+1][0], deck[e+2][0])
-                    if upcardnum == deck[e][0]:
-                        upcardsuit = deck[e][1]
-                        setup1()
-                        continue
-                        
-                    elif upcardnum ==  deck[e+1][0]:
-                        upcardsuit = deck[e+1][1]
-                        setup1()
-                        continue
-                        
+    # Second draw, first player knocks (Skip P1):
+    current_player = 2
+    current_player_idx = 1
+    player_hand_idx = 3
+    upcard_index = 1
+
+    # Update the initial face-up card
+    upcard_value = deck[-upcard_index][0]
+    upcard_suit = deck[-upcard_index][1]
+
+    # Each player draws, discards, and recalculates hand value
+    while current_player <= player_count:
+        hand_value = 0
+
+        # All hand cards are the same suit:
+        if (
+                deck[player_hand_idx + 1][1] == deck[player_hand_idx + 2][1]  # S2 = S3
+                and deck[player_hand_idx][1] == deck[player_hand_idx + 1][1]  # S1 = S2
+                and deck[player_hand_idx + 1][1] == deck[player_hand_idx + 2][1]  # S2 = S3
+        ):
+            # If face-up card doesn't share the same suit:
+            if upcard_suit != deck[player_hand_idx][1]:
+                hand_card_values = [deck[player_hand_idx][0], deck[player_hand_idx + 1][0],
+                                    deck[player_hand_idx + 2][0]]
+                # If face-up card is greater than (or equal to) the sum of all 3 cards:
+                if upcard_value >= sum(hand_card_values):
+                    hand_value = upcard_value
+                    # The lowest hand card is discarded (and becomes the face-up card)
+                    upcard_value = min(hand_card_values)
+                    if upcard_value == deck[player_hand_idx][0]:
+                        # Discard the first card
+                        upcard_suit = deck[player_hand_idx][1]
+                    elif upcard_value == deck[player_hand_idx + 1][0]:
+                        # Discard the second card
+                        upcard_suit = deck[player_hand_idx + 1][1]
                     else:
-                        upcardsuit = deck[e+2][1]
-                        setup1()
-                        continue
-                                            
-                #if upcard is not greater than or equal to the sum of all 3 cards:
+                        # Discard the third card
+                        upcard_suit = deck[player_hand_idx + 2][1]
+
+                    # Increment the turn variables, and move on to the next player
+                    increment_with_discard_draw()
+                    continue
+
+                # If face-up card is not greater than or equal to the sum of all 3 cards:
                 else:
-                    #if newcard shares a suit:
-                    if deck[-o - 1][1] == deck[e][1]:
-                        total = (deck[-o-1][0] + deck[e][0] + deck[e+1][0] + deck[e+2][0]) - min(deck[-o-1][0], deck[e][0], deck[e+1][0], deck[e+2][0])
-                        upcardnum = min(deck[-o-1][0], deck[e][0], deck[e+1][0], deck[e+2][0])
-                        upcardsuit = deck[e][1]
-                        setup2()
+                    # Draw a card from the top of the deck
+                    # If drawn card is the same suit:
+                    if deck[-upcard_index - 1][1] == deck[player_hand_idx][1]:
+                        hand_card_values = [deck[-upcard_index - 1][0], deck[player_hand_idx][0],
+                                            deck[player_hand_idx + 1][0], deck[player_hand_idx + 2][0]]
+                        # Discard the lowest-value card (it becomes the face-up card)
+                        upcard_value = min(hand_card_values)
+                        upcard_suit = deck[player_hand_idx][1]
+                        hand_value = sum(hand_card_values) - upcard_value
+
+                        # Increment the turn variables, and move on to the next player
+                        increment_with_deck_draw()
                         continue
-                        
-                    #if newcard doesn't share a suit:
+
+                    # If drawn card doesn't share a suit:
                     else:
-                        #if newcard is greater than or equal to the sum of the three cards:
-                        if deck[-o - 1][0] >= (deck[e][0] + deck[e+1][0] + deck[e+2][0]):
-                            total = deck[-o - 1][0]
-                            upcardnum = min(deck[e][0], deck[e+1][0], deck[e+2][0]) 
-                            upcardsuit = deck[e][1]
-                            setup2()
+                        # If the drawn card is better than the sum of the three cards:
+                        hand_card_values = [deck[player_hand_idx][0], deck[player_hand_idx + 1][0],
+                                            deck[player_hand_idx + 2][0]]
+                        if deck[-upcard_index - 1][0] >= sum(hand_card_values):
+                            # Draw from the deck, discarding the worst card
+                            hand_value = deck[-upcard_index - 1][0]
+                            upcard_value = min(hand_card_values)
+                            upcard_suit = deck[player_hand_idx][1]
+
+                            # Increment the turn variables, and move on to the next player
+                            increment_with_deck_draw()
                             continue
-                            
-                        #if newcard is not greater than or equal to the sum of the three cards:
+
+                        # If new card is worse the sum of the three cards:
                         else:
-                            total = deck[e][0] + deck[e+1][0] + deck[e+2][0]
-                            upcardnum = deck[-o - 1][0]
-                            upcardsuit = deck[-o - 1][1]
-                            setup2()
+                            # Hand value is unchanged, and the face-up card remains the same
+                            hand_value = deck[player_hand_idx][0] + deck[player_hand_idx + 1][0] + \
+                                         deck[player_hand_idx + 2][0]
+                            upcard_value = deck[-upcard_index - 1][0]
+                            upcard_suit = deck[-upcard_index - 1][1]
+                            increment_with_deck_draw()
                             continue
-                        
-            #if upcard is also same suit:
-            elif upcardsuit == deck[e][1]:
-                #if upcard is greater than at least 1 of the cards[otherwise newcard]:
-                if upcardnum > deck[e][0] or upcardnum > deck[e+1][0] or upcardnum > deck[e+2][0]:
-                    total = (total + deck[e][0] + deck[e+1][0] + deck[e+2][0] + upcardnum) - min(deck[e][0], deck[e+1][0], deck[e+2][0])
-                    upcardnum = min(deck[e][0], deck[e+1][0], deck[e+2][0])
 
-                    if upcardnum == deck[e][0]:
-                        upcardsuit = deck[e][1]
-                        setup1()
-                        continue
-                        
-                    elif upcardnum == deck[e+1][0]:
-                        upcardsuit = deck[e+1][1]
-                        setup1()
-                        continue
-                        
+            # If face-up card is the same suit:
+            elif upcard_suit == deck[player_hand_idx][1]:
+                # If face-up is greater than at least 1 of the cards [otherwise newcard]:
+                if (
+                        upcard_value > deck[player_hand_idx][0]
+                        or upcard_value > deck[player_hand_idx + 1][0]
+                        or upcard_value > deck[player_hand_idx + 2][0]
+                ):
+                    # Discard the lowest-value card (it becomes the face-up card)
+                    hand_card_values = [deck[player_hand_idx][0], deck[player_hand_idx + 1][0],
+                                        deck[player_hand_idx + 2][0]]
+                    worst_card_value = min(hand_card_values)
+
+                    hand_value = (hand_value + sum(hand_card_values) + upcard_value) - worst_card_value
+                    upcard_value = worst_card_value
+
+                    # Update the new face-up card's suit
+                    if upcard_value == deck[player_hand_idx][0]:
+                        upcard_suit = deck[player_hand_idx][1]
+                    elif upcard_value == deck[player_hand_idx + 1][0]:
+                        upcard_suit = deck[player_hand_idx + 1][1]
                     else:
-                        upcardsuit = deck[e+2][1]
-                        setup1()
-                        continue
-                        
-                #if upcard is not greater than any of the cards:
+                        upcard_suit = deck[player_hand_idx + 2][1]
+
+                    # Increment the turn variables, and move to the next player
+                    increment_with_discard_draw()
+                    continue
+
+                # If face-up card is not greater than any of the cards:
+                # (Draw a card from the top of the deck)
                 else:
-                    #if newcard shares a suit:
-                    if deck[-o - 1][1] == deck[e][1]:
-                        total = (deck[-o-1][0] + deck[e][0] + deck[e+1][0] + deck[e+2][0]) - min(deck[-o-1][0], deck[e][0], deck[e+1][0], deck[e+2][0])
-                        upcardnum = min(deck[-o-1][0], deck[e][0], deck[e+1][0], deck[e+2][0])
-                        upcardsuit = deck[e][1]
-                        setup2()
+                    hand_card_values = [deck[-upcard_index - 1][0], deck[player_hand_idx][0],
+                                        deck[player_hand_idx + 1][0], deck[player_hand_idx + 2][0]]
+                    # If the drawn card shares a suit:
+                    if deck[-upcard_index - 1][1] == deck[player_hand_idx][1]:
+                        # Discard the lowest value card
+                        hand_value = sum(hand_card_values) - min(hand_card_values)
+                        upcard_value = min(hand_card_values)
+                        upcard_suit = deck[player_hand_idx][1]
+                        increment_with_deck_draw()
                         continue
-                        
-                    #if newcard doesn't share a suit:
+
+                    # If the drawn card doesn't share a suit:
                     else:
-                        #if newcard is greater than or equal to the sum of the three cards:
-                        if deck[-o - 1][0] >= (deck[e][0] + deck[e+1][0] + deck[e+2][0]):
-                            total = deck[-o - 1][0]
-                            upcardnum = min(deck[e][0], deck[e+1][0], deck[e+2][0]) 
-                            upcardsuit = deck[e][1]
-                            setup2()
+                        # If the drawn card is greater than or equal to the sum of the three cards:
+                        if deck[-upcard_index - 1][0] >= (
+                                deck[player_hand_idx][0] + deck[player_hand_idx + 1][0] + deck[player_hand_idx + 2][0]):
+                            hand_value = deck[-upcard_index - 1][0]
+                            # Discard the lowest of the cards already in hand
+                            upcard_value = min(deck[player_hand_idx][0], deck[player_hand_idx + 1][0],
+                                               deck[player_hand_idx + 2][0])
+                            upcard_suit = deck[player_hand_idx][1]
+                            increment_with_deck_draw()
                             continue
-                            
-                        #if newcard is not greater than or equal to the sum of the three cards:
+
+                        # If the drawn card is worse than the sum of the three cards:
                         else:
-                            total = deck[e][0] + deck[e+1][0] + deck[e+2][0]
-                            upcardnum = deck[-o - 1][0]
-                            upcardsuit = deck[-o - 1][1]
-                            setup2()
+                            hand_value = deck[player_hand_idx][0] + deck[player_hand_idx + 1][0] + \
+                                         deck[player_hand_idx + 2][0]
+                            # Discard the drawn card, leaving hand the same
+                            upcard_value = deck[-upcard_index - 1][0]
+                            upcard_suit = deck[-upcard_index - 1][1]
+                            increment_with_deck_draw()
                             continue
-                            
-#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------                        
-        #no same suit:
-        if deck[e][1] != deck[e+2][1] and deck[e][1] != deck[e+1][1] and deck[e+1][1] != deck[e+2][1]:
-            #if cards are three of a kind:
-            #if the cards are below 10:
-            if deck[e][0] < 10:
-                #if all 3 card values are the same:
-                if deck[e][0] == deck[e+1][0] and deck[e][0] == deck[e][0] == deck[e+2][0]:
-                    total = 30.5
-                    upcardnum = deck[-o - 1][0]
-                    upcardsuit = deck[-o - 1][1]
-                    setup2()
-                    continue 
-            #if the cards are 10 or face cards:
-            if deck[e][0] == 10 or deck[e][0] == 11:
-                #if all 3 card values are the same:
-                if deck[e][2] == deck[e+1][2]  and deck[e][2] == deck[e+2][2]:
-                    total = 30.5
-                    upcardnum = deck[-o - 1][0]
-                    upcardsuit = deck[-o - 1][1]
-                    setup2()
-                    continue  
 
-            #if upcard doesn't share a suit:
-            if upcardsuit != deck[e][1] and upcardsuit != deck[e+1][1] and upcardsuit != deck[e+2][1]:
-                #If upcard is the highest [COULD FLESH OUT MORE: perhaps if upcard is lower than 5 then you choose from the deck, not just the upcard]:
-                if upcardnum > deck[e][0] and upcardnum > deck[e+1][0] and upcardnum > deck[e+2][0]:
-                    total = upcardnum
-                    upcardnum = min(deck[e][0], deck[e+1][0], deck[e+2][0])
-                    if upcardnum == deck[e][0]:
-                        upcardsuit = deck[e][1]
-                        setup1()
-                        continue
-                    elif upcardnum == deck[e+1][0]:
-                         upcardsuit = deck[e+1][1]
-                         setup1()
-                         continue
+        # -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        # No matching suits:
+        if deck[player_hand_idx][1] != deck[player_hand_idx + 2][1] and deck[player_hand_idx][1] != \
+                deck[player_hand_idx + 1][1] and deck[player_hand_idx + 1][1] != deck[player_hand_idx + 2][1]:
+
+            hand_card_values = [deck[player_hand_idx][0], deck[player_hand_idx + 1][0],
+                                deck[player_hand_idx + 2][0]]
+
+            # If cards are three of a kind:
+            if deck[player_hand_idx][0] < 10:
+                if deck[player_hand_idx][0] == deck[player_hand_idx + 1][0] and deck[player_hand_idx][0] == \
+                        deck[player_hand_idx][0] == deck[player_hand_idx + 2][0]:
+                    hand_value = 30.5
+                    # Discard the drawn card
+                    upcard_value = deck[-upcard_index - 1][0]
+                    upcard_suit = deck[-upcard_index - 1][1]
+                    increment_with_deck_draw()
+                    continue
+            if deck[player_hand_idx][0] == 10 or deck[player_hand_idx][0] == 11:
+                # For face cards, use card "value" (index 2) instead of base number
+                if deck[player_hand_idx][2] == deck[player_hand_idx + 1][2] and deck[player_hand_idx][2] == \
+                        deck[player_hand_idx + 2][2]:
+                    hand_value = 30.5
+                    # Discard the drawn card
+                    upcard_value = deck[-upcard_index - 1][0]
+                    upcard_suit = deck[-upcard_index - 1][1]
+                    increment_with_deck_draw()
+                    continue
+
+            # If the face-up card doesn't share a suit:
+            if upcard_suit != deck[player_hand_idx][1] and upcard_suit != deck[player_hand_idx + 1][
+                1] and upcard_suit != deck[player_hand_idx + 2][1]:
+                # TODO: Perhaps if upcard is lower than 5 then you choose from the deck, not just the upcard
+                # If the face-up card is the highest:
+                if upcard_value > max(hand_card_values):
+                    hand_value = upcard_value
+                    # Discard the lowest card in hand
+                    upcard_value = min(hand_card_values)
+                    if upcard_value == deck[player_hand_idx][0]:
+                        upcard_suit = deck[player_hand_idx][1]
+                    elif upcard_value == deck[player_hand_idx + 1][0]:
+                        upcard_suit = deck[player_hand_idx + 1][1]
                     else:
-                        upcardsuit = deck[e+2][1]
-                        setup1()
-                        continue
-                #If upcard is the lowest or tied with the highest:
-                else:
-                    drawcard1()
+                        upcard_suit = deck[player_hand_idx + 2][1]
+
+                    # Increment the turn variables, and move to the next player
+                    increment_with_discard_draw()
                     continue
 
-            #if upcard shares a suit with card 1:
-            elif upcardsuit == deck[e][1]: 
-                #if upcard and card 1 is greater than either of the other cards:
-                if (upcardnum + deck[e][0]) > max(deck[e+1][0], deck[e+2][0]):
-                    total = upcardnum + deck[e][0]
-                    upcardnum = min(deck[e+1][0], deck[e+2][0])
-                    if upcardnum == deck[e+1][0]:
-                        upcardsuit = deck[e+1][1]
-                        setup1()
-                        continue
+                # If the drawn card is the lowest or tied with the highest:
+                else:
+                    draw_card_no_shared_suits()
+                    continue
+
+            # If the face-up card shares a suit with card 1:
+            elif upcard_suit == deck[player_hand_idx][1]:
+                # If the face-up card and card 1 combined are greater than either of the other cards:
+                if (upcard_value + deck[player_hand_idx][0]) > max(hand_card_values):
+                    hand_value = upcard_value + deck[player_hand_idx][0]
+                    # Discard the lowest card
+                    upcard_value = min(hand_card_values)
+                    if upcard_value == deck[player_hand_idx + 1][0]:
+                        upcard_suit = deck[player_hand_idx + 1][1]
                     else:
-                        upcardsuit = deck[e+2][1]
-                        setup1()
-                        continue
-                #if not:
-                else:
-                    drawcard1()
+                        upcard_suit = deck[player_hand_idx + 2][1]
+
+                    # Increment the turn variables, and move on to the next player
+                    increment_with_discard_draw()
                     continue
-                                                  
-            #if upcard shares a suit with card 2:
-            elif upcardsuit == deck[e+1][1]:
-                #if upcard and card 2 is greater than either of the other cards:
-                if (upcardnum + deck[e+1][0]) > max(deck[e][0], deck[e+2][0]):
-                    total = upcardnum + deck[e+1][0]
-                    upcardnum = min(deck[e][0], deck[e+2][0])
-                    if upcardnum == deck[e][0]:
-                        upcardsuit = deck[e][1]
-                        setup1()
-                        continue
+
+                # If the face-up card and card 1 combined are NOT the maximum value:
+                else:
+                    draw_card_no_shared_suits()
+                    continue
+
+            # If the face-up card shares a suit with card 2:
+            elif upcard_suit == deck[player_hand_idx + 1][1]:
+                # If the face-up card and card 2 combined are greater than either of the other cards:
+                if (upcard_value + deck[player_hand_idx + 1][0]) > max(hand_card_values):
+                    hand_value = upcard_value + deck[player_hand_idx + 1][0]
+                    # Discard the lowest of the two remaining cards
+                    upcard_value = min(deck[player_hand_idx][0], deck[player_hand_idx + 2][0])
+                    if upcard_value == deck[player_hand_idx][0]:
+                        upcard_suit = deck[player_hand_idx][1]
                     else:
-                        upcardsuit = deck[e+2][1]
-                        setup1()
-                        continue
-                #if not:
-                else: 
-                    drawcard1()
+                        upcard_suit = deck[player_hand_idx + 2][1]
+
+                    # Increment the turn variables, and move on to the next player
+                    increment_with_discard_draw()
                     continue
-            #if upcard shares a suit with card 3:
-            elif upcardsuit == deck[e+2][1]:
-                #if upcard and card 3 is greater than or equal to either of the other cards:
-                if (upcardnum + deck[e+2][0]) >= max(deck[e][0], deck[e+1][0]):
-                    total = upcardnum + deck[e+2][0]
-                    upcardnum = min(deck[e+1][0], deck[e][0])
-                    if upcardnum == deck[e+1][0]:
-                        upcardsuit = deck[e+1][1]
-                        setup1()
-                        continue
+                # If the face-up card and card 2 combined are NOT the maximum value:
+                else:
+                    draw_card_no_shared_suits()
+                    continue
+
+            # If the face-up card shares a suit with card 3:
+            elif upcard_suit == deck[player_hand_idx + 2][1]:
+                # If the face-up card and card 3 combined are greater than either of the other cards:
+                if (upcard_value + deck[player_hand_idx + 2][0]) > max(hand_card_values):
+                    hand_value = upcard_value + deck[player_hand_idx + 2][0]
+                    # Discard the lowest of hte two remaining cards
+                    upcard_value = min(deck[player_hand_idx + 1][0], deck[player_hand_idx][0])
+                    if upcard_value == deck[player_hand_idx + 1][0]:
+                        upcard_suit = deck[player_hand_idx + 1][1]
                     else:
-                        upcardsuit = deck[e][1]
-                        setup1()
-                        continue
-                #if not:
-                else: 
-                    drawcard1()
-                    continue
-    
- #--------------------------------------------------------------------------------------------------------------------------------------------------             
-        #if cards 1 & 2 share suits:
-        if deck[e][1] != deck[e+2][1] and deck[e][1] == deck[e+1][1] and deck[e+1][1] != deck[e+2][1]:
+                        upcard_suit = deck[player_hand_idx][1]
 
-            #if upcard shares no suits:
-            if upcardsuit != deck[e+2][1] and upcardsuit != deck[e+1][1]:
-                #if upcard is max:
-                if upcardnum >= deck[e+2][0] and upcardnum >= (deck[e+1][0] + deck[e][0]):
-                    total = upcardnum
-                    upcardnum == min(deck[e+1][0], deck[e][0], deck[e+2][0])
-                    if upcardnum == deck[e][0]:
-                        upcardsuit = deck[e][1]
-                        setup1()
-                        continue
-                    elif upcardnum == deck[e+1][0]:
-                        upcardsuit = deck[e+1][1]
-                        setup1() 
-                        continue
+                    # Increment the turn variables, and move on to the next player
+                    increment_with_discard_draw()
+                    continue
+                # If the face-up card and card 3 combined are NOT the maximum value:
+                else:
+                    draw_card_no_shared_suits()
+                    continue
+
+        # --------------------------------------------------------------------------------------------------------------------------------------------------
+        # If cards 1 and 2 share suits:
+        if deck[player_hand_idx][1] == deck[player_hand_idx + 1][1] and deck[player_hand_idx][1] != \
+                deck[player_hand_idx + 2][1]:
+
+            # If the face-up card shares no suits:
+            if upcard_suit != deck[player_hand_idx + 2][1] and upcard_suit != deck[player_hand_idx + 1][1]:
+                # If the face-up card is the maximum value:
+                if upcard_value >= deck[player_hand_idx + 2][0] and upcard_value >= (
+                        deck[player_hand_idx + 1][0] + deck[player_hand_idx][0]):
+                    hand_value = upcard_value
+                    # Discard the lowest card
+                    upcard_value = min(deck[player_hand_idx + 1][0], deck[player_hand_idx][0],
+                                       deck[player_hand_idx + 2][0])
+                    if upcard_value == deck[player_hand_idx][0]:
+                        upcard_suit = deck[player_hand_idx][1]
+                    elif upcard_value == deck[player_hand_idx + 1][0]:
+                        upcard_suit = deck[player_hand_idx + 1][1]
                     else:
-                        upcardsuit = deck[e+2][1]
-                        setup1() 
-                        continue
+                        upcard_suit = deck[player_hand_idx + 2][1]
 
-                #if card 3, or cards 1 and 2, are max:
-                else:
-                    drawcard2()
+                    # Increment the turn variables, and move on to the next player
+                    increment_with_discard_draw()
                     continue
-              
-            #if upcard shares a suit with the 3rd card:
-            elif upcardsuit == deck[e+2][1]:
-                #if upcard and 3rd card are greater than cards 1 and 2:
-                if (upcardnum + deck[e+2][0]) > (deck[e][0] + deck[e+1][0]):
-                    total = upcardnum + deck[e+2][0]
-                    upcardnum = min(deck[e][0], deck[e+1][0])
-                    if upcardnum == deck[e][0]:
-                        upcardsuit = deck[e][1]
-                        setup1()
-                        continue
+
+                # If the face-up card is NOT the maximum value:
+                else:
+                    draw_card_1_2_share_suits()
+                    continue
+
+            # If the face-up card shares a suit with card 3:
+            elif upcard_suit == deck[player_hand_idx + 2][1]:
+                # If the face-up card and card 3 are greater than cards 1 and 2:
+                if (upcard_value + deck[player_hand_idx + 2][0]) > (
+                        deck[player_hand_idx][0] + deck[player_hand_idx + 1][0]):
+                    hand_value = upcard_value + deck[player_hand_idx + 2][0]
+                    # Discard the lesser of cards 1 and 2
+                    upcard_value = min(deck[player_hand_idx][0], deck[player_hand_idx + 1][0])
+                    if upcard_value == deck[player_hand_idx][0]:
+                        # Discard card 1
+                        upcard_suit = deck[player_hand_idx][1]
                     else:
-                        upcardsuit = deck[e+1][1]
-                        setup1() 
-                        continue                   
-                #if cards 1 and 2 are greater than upcard and card 3:
-                else:
-                    drawcard2()   
-                    continue       
+                        # Discard card 2
+                        upcard_suit = deck[player_hand_idx + 1][1]
 
-            #if upcard shares a suit with cards 1 and 2:
-            elif upcardsuit == deck[e+1][1]:
-                #if upcard and cards 1 and 2 are greater than or equal to card 3:
-                if (upcardnum + deck[e+1][0] + (deck[e][0]) >= deck[e+2][0]):
-                    total = upcardnum + deck[e+1][0] + deck[e][0]
-                    upcardnum = deck[e+2][0]
-                    upcardsuit = deck[e+2][1]
-                    setup1()  
+                    # Increment the turn variables, and move on to the next player
+                    increment_with_discard_draw()
                     continue
-                #if card 3 is greater than upcard, card 1, and card 2:
+
+                # If cards 1 and 2 combined are greater than the face-up card and card 3 combined:
                 else:
-                    drawcard2()
+                    draw_card_1_2_share_suits()
                     continue
-         
-#--------------------------------------------------------------------------------------------------------------------------        
-        #if cards 1 & 3 share suits:
-        if deck[e][1] == deck[e+2][1] and deck[e][1] != deck[e+1][1] and deck[e+1][1] != deck[e+2][1]:
-            #if upcard shares no suits:
-            if upcardsuit != deck[e+2][1] and upcardsuit != deck[e+1][1]:
-                #if upcard is max:
-                if upcardnum >= deck[e+1][0] and upcardnum >= (deck[e+2][0] + deck[e][0]): 
-                    total = upcardnum
-                    upcardnum == min(deck[e+1][0], deck[e][0], deck[e+2][0])
-                    if upcardnum == deck[e][0]:
-                        upcardsuit = deck[e][1]
-                        setup1()
-                        continue
-                    elif upcardnum == deck[e+1][0]:
-                        upcardsuit = deck[e+1][1]
-                        setup1() 
-                        continue
+
+            # If the face-up card shares a suit with cards 1 and 2:
+            elif upcard_suit == deck[player_hand_idx + 1][1]:
+                # If cards 1, 2 and the face-up card combined are greater than or equal to card 3:
+                if (upcard_value + deck[player_hand_idx + 1][0] + (deck[player_hand_idx][0]) >=
+                        deck[player_hand_idx + 2][0]):
+                    hand_value = upcard_value + deck[player_hand_idx + 1][0] + deck[player_hand_idx][0]
+                    # Discard card 3
+                    upcard_value = deck[player_hand_idx + 2][0]
+                    upcard_suit = deck[player_hand_idx + 2][1]
+
+                    # Increment the turn variables, and move on to the next player
+                    increment_with_discard_draw()
+                    continue
+                # If card 3 is greater than the cards 1, 2, and the face-up card combined:
+                else:
+                    draw_card_1_2_share_suits()
+                    continue
+
+        # --------------------------------------------------------------------------------------------------------------------------
+        # If cards 1 and 3 share suits:
+        if deck[player_hand_idx][1] == deck[player_hand_idx + 2][1] and deck[player_hand_idx][1] != \
+                deck[player_hand_idx + 1][1] and deck[player_hand_idx + 1][1] != deck[player_hand_idx + 2][1]:
+
+            hand_card_values = [deck[player_hand_idx][0], deck[player_hand_idx + 1][0],
+                                deck[player_hand_idx + 2][0]]
+
+            # If the face-up card shares no suits:
+            if upcard_suit != deck[player_hand_idx + 2][1] and upcard_suit != deck[player_hand_idx + 1][1]:
+                # If the face-up card is the maximum value:
+                if upcard_value >= deck[player_hand_idx + 1][0] and upcard_value >= (
+                        deck[player_hand_idx + 2][0] + deck[player_hand_idx][0]):
+                    hand_value = upcard_value
+
+                    # Discard the lowest card
+                    upcard_value = min(hand_card_values)
+                    if upcard_value == deck[player_hand_idx][0]:
+                        upcard_suit = deck[player_hand_idx][1]
+                    elif upcard_value == deck[player_hand_idx + 1][0]:
+                        upcard_suit = deck[player_hand_idx + 1][1]
                     else:
-                        upcardsuit = deck[e+2][1]
-                        setup1() 
-                        continue
-                #if card 3, or cards 1 and 2, are max:
-                else:
-                    drawcard3()
+                        upcard_suit = deck[player_hand_idx + 2][1]
+
+                    # Increment the turn variables, and move on to the next player
+                    increment_with_discard_draw()
                     continue
 
-            #if upcard shares a suit with the 2nd card:
-            elif upcardsuit == deck[e+1][1]:
-                #if upcard and 2nd card are greater than cards 1 and 3:
-                if (upcardnum + deck[e+1][0]) > (deck[e][0] + deck[e+2][0]):
-                    total = upcardnum + deck[e+1][0]
-                    upcardnum = min(deck[e][0], deck[e+2][0])
-                    if upcardnum == deck[e][0]:
-                        upcardsuit = deck[e][1]
-                        setup1()
-                        continue
+                # If card 2 or the combination of cards 1 and 3 are max:
+                else:
+                    draw_card_1_3_share_suits()
+                    continue
+
+            # If the face-up card shares a suit with card 2:
+            elif upcard_suit == deck[player_hand_idx + 1][1]:
+                # If the face-up card and card 2 combined are greater than cards 1 and 3 combined:
+                if (upcard_value + deck[player_hand_idx + 1][0]) > (
+                        deck[player_hand_idx][0] + deck[player_hand_idx + 2][0]):
+                    hand_value = upcard_value + deck[player_hand_idx + 1][0]
+                    # Discard the lesser of cards 1 and 3
+                    upcard_value = min(deck[player_hand_idx][0], deck[player_hand_idx + 2][0])
+                    if upcard_value == deck[player_hand_idx][0]:
+                        # Discard card 1
+                        upcard_suit = deck[player_hand_idx][1]
                     else:
-                        upcardsuit = deck[e+2][1]
-                        setup1()
-                        continue 
-                #if cards 1 and 3 are greater than upcard and card 2:
-                else:
-                    drawcard3()
+                        # Discard card 3
+                        upcard_suit = deck[player_hand_idx + 2][1]
+
+                    # Increment the turn variables, and move on to the next player
+                    increment_with_discard_draw()
                     continue
 
-            #if upcard shares a suit with cards 1 and 3:
-            elif upcardsuit == deck[e][1]:
-                #if upcard and cards 1 and 3 are greater than or equal to card 2:
-                if (upcardnum + deck[e+2][0] + (deck[e][0]) >= deck[e+1][0]):
-                    total = upcardnum + deck[e+2][0] + deck[e][0]
-                    upcardnum = deck[e+1][0]
-                    upcardsuit = deck[e+1][1]
-                    setup1() 
-                    continue   
-                #if card 2 is greater than upcard, card 1, and card 3:
+                # If cards 1 and 3 combined are greater than the face-up card and card 2 combined:
                 else:
-                    drawcard3()
+                    draw_card_1_3_share_suits()
                     continue
-         
-#------------------------------------------------------------------------------------------------------------------------        
-        #if cards 2 & 3 share suits: 
-        if deck[e][1] != deck[e+2][1] and deck[e][1] != deck[e+1][1] and deck[e+1][1] == deck[e+2][1]: 
-            #if upcard shares no suits:
-            if upcardsuit != deck[e][1] and upcardsuit != deck[e+1][1]:
-                #if upcard is max:
-                if upcardnum >= deck[e][0] and upcardnum >= (deck[e+1][0] + deck[e+2][0]):
-                    total = upcardnum
-                    upcardnum == min(deck[e+1][0], deck[e][0], deck[e+2][0])
-                    if upcardnum == deck[e][0]:
-                        upcardsuit = deck[e][1]
-                        setup1()
-                        continue
-                    elif upcardnum == deck[e+1][0]:
-                        upcardsuit = deck[e+1][1]
-                        setup1() 
-                        continue
+
+            # If the face-up card shares a suit with cards 1 and 3:
+            elif upcard_suit == deck[player_hand_idx][1]:
+                # If the face-up card and cards 1 and 3 combined are greater than or equal to card 2:
+                if (upcard_value + deck[player_hand_idx + 2][0] + (deck[player_hand_idx][0]) >=
+                        deck[player_hand_idx + 1][0]):
+                    hand_value = upcard_value + deck[player_hand_idx + 2][0] + deck[player_hand_idx][0]
+                    # Discard card 2
+                    upcard_value = deck[player_hand_idx + 1][0]
+                    upcard_suit = deck[player_hand_idx + 1][1]
+
+                    # Increment the turn variables, and move on to the next player
+                    increment_with_discard_draw()
+                    continue
+
+                # If card 2 is greater than the face-up card, card 1, and card 3 combined:
+                else:
+                    draw_card_1_3_share_suits()
+                    continue
+
+        # ------------------------------------------------------------------------------------------------------------------------
+        # If cards 2 and 3 share suits:
+        if deck[player_hand_idx][1] != deck[player_hand_idx + 2][1] and deck[player_hand_idx][1] != \
+                deck[player_hand_idx + 1][1] and deck[player_hand_idx + 1][1] == deck[player_hand_idx + 2][1]:
+
+            # If the face-up card shares no suits:
+            if upcard_suit != deck[player_hand_idx][1] and upcard_suit != deck[player_hand_idx + 1][1]:
+                # If the face-up card is the maximum value:
+                if upcard_value >= deck[player_hand_idx][0] and upcard_value >= (
+                        deck[player_hand_idx + 1][0] + deck[player_hand_idx + 2][0]):
+                    hand_value = upcard_value
+                    # Discard the lowest card
+                    upcard_value = min(deck[player_hand_idx + 1][0], deck[player_hand_idx][0],
+                                       deck[player_hand_idx + 2][0])
+                    if upcard_value == deck[player_hand_idx][0]:
+                        upcard_suit = deck[player_hand_idx][1]
+                    elif upcard_value == deck[player_hand_idx + 1][0]:
+                        upcard_suit = deck[player_hand_idx + 1][1]
                     else:
-                        upcardsuit = deck[e+2][1]
-                        setup1() 
-                        continue
-                #if card 1, or cards 3 and 2, are max:
-                else:
-                    drawcard4()
+                        upcard_suit = deck[player_hand_idx + 2][1]
+
+                    # Increment the turn variables, and move on to the next player
+                    increment_with_discard_draw()
                     continue
-            #if upcard shares a suit with the 1st card:
-            elif upcardsuit == deck[e][1]:
-                #if upcard and 1st card are greater than cards 2 & 3:
-                if (upcardnum + deck[e][0]) > (deck[e+2][0] + deck[e+1][0]):
-                    total = upcardnum + deck[e][0]
-                    upcardnum = min(deck[e+1][0], deck[e+2][0])
-                    if upcardnum == deck[e+1][0]:
-                        upcardsuit = deck[e+1][1]
-                        setup1()
-                        continue
+
+                # If card 1 or cards 3 and 2 combined are max:
+                else:
+                    draw_card_2_3_share_suits()
+                    continue
+
+            # If the face-up card shares a suit with card 1:
+            elif upcard_suit == deck[player_hand_idx][1]:
+                # If the face-up card and card 1 combined are greater than cards 2 and 3 combined:
+                if (upcard_value + deck[player_hand_idx][0]) > (
+                        deck[player_hand_idx + 2][0] + deck[player_hand_idx + 1][0]):
+                    hand_value = upcard_value + deck[player_hand_idx][0]
+                    # Discard the lesser of cards 2 and 3
+                    upcard_value = min(deck[player_hand_idx + 1][0], deck[player_hand_idx + 2][0])
+                    if upcard_value == deck[player_hand_idx + 1][0]:
+                        # Discard card 2
+                        upcard_suit = deck[player_hand_idx + 1][1]
                     else:
-                        upcardsuit = deck[e+2][1]
-                        setup1()  
-                        continue
-                #if cards 3 and 2 are greater than upcard and card 1:
-                else:
-                    drawcard4() 
-                    continue           
+                        # Discard card 3
+                        upcard_suit = deck[player_hand_idx + 2][1]
 
-            #if upcard shares a suit with cards 3 and 2:
-            elif upcardsuit == deck[e+1][1]:
-                #if upcard and cards 3 and 2 are greater than or equal to card 1:
-                if (upcardnum + deck[e+1][0] + (deck[e+2][0]) >= deck[e][0]):
-                    total = upcardnum + deck[e+1][0] + deck[e+2][0]
-                    upcardnum = deck[e][0]
-                    upcardsuit = deck[e][1]
-                    setup1()  
+                    # Increment the turn variables, and move on to the next player
+                    increment_with_discard_draw()
                     continue
-                #if card 1 is greater than upcard, card 3, and card 2:
+
+                # If cards 3 and 2 combined are greater than the face-up card and card 1 combined:
                 else:
-                    drawcard4()
+                    draw_card_2_3_share_suits()
                     continue
-#-------------------------------------------------------------------------------------------------------------------------
-   
-    _2nd_deal_scores = 0
-    average = 0
-    r = 1
 
-    while r < num:
-        _2nd_deal_scores += scores[r]
-        r += 1
+            # If the face-up card shares a suit with cards 3 and 2:
+            elif upcard_suit == deck[player_hand_idx + 1][1]:
+                # If the face-up card, card 3, and card 2 combined are greater than or equal to card 1:
+                if (upcard_value + deck[player_hand_idx + 1][0] + (deck[player_hand_idx + 2][0]) >=
+                        deck[player_hand_idx][0]):
+                    hand_value = upcard_value + deck[player_hand_idx + 1][0] + deck[player_hand_idx + 2][0]
+                    # Discard card 1
+                    upcard_value = deck[player_hand_idx][0]
+                    upcard_suit = deck[player_hand_idx][1]
 
-    average = float(f'{(_2nd_deal_scores / (num - 1)):.10f}')
-    #print(average)
-    count += 1
-    all_total = float(all_total) + float(average)
+                    # Increment the turn variables, and move on to the next player
+                    increment_with_discard_draw()
+                    continue
 
-all_total = f'{(all_total / iterations):.10f}'
-print('')
-print(f'Average score of other players after having knocked: {all_total}')
-print('')
+                # If card 1 is greater than the face-up card, card 3, and card 2 combined:
+                else:
+                    draw_card_2_3_share_suits()
+                    continue
+    # -------------------------------------------------------------------------------------------------------------------------
 
-#Standard deviation:
-sum = 0.0
-j = 0
-h = 0
-while j <= iterations:
-    sum = float(sum) + (float(total_scores[h]) - float(all_total))**2
-    j += 1
-    h += 1
+    other_players_total_score = sum(scores[1:])
+    average = round(other_players_total_score / (player_count - 1), 10)
 
-std_dev = math.sqrt((sum / iterations))
+    all_total += float(average)
+
+all_total = round(all_total / iterations, 10)
+print(f"\nAverage score of other players after having knocked: {all_total}\n")
+
+# Find the standard deviation
+score_sum = sum([(total_scores[h] - all_total) ** 2 for h in range(iterations)])
+std_dev = math.sqrt((score_sum / iterations))
 print(f'Standard Deviation: {std_dev}\n')
 
-#75th and 25th percentile:
-#75th percentile = mean + (z * standard deviation), where z is taken from a table (https://www.statology.org/calculate-percentile-from-mean-standard-deviation/)
-#Remember, e.g. 75th percentile means that 75% of all the answers are below yours, and 25% are above
+# 75th and 25th percentile:
+# 75th percentile = mean + (z * standard deviation), where z is taken from a table (https://www.statology.org/calculate-percentile-from-mean-standard-deviation/)
+# Remember, e.g. 75th percentile means that 75% of all the answers are below yours, and 25% are above
 
 percent75 = float(all_total) + (0.67 * std_dev)
 percent25 = float(all_total) + (-0.67 * std_dev)
@@ -867,3 +1000,4 @@ print(f'75th percentile: {percent75}')
 print(f'25th percentile: {percent25}')
 
 # MrJoshie333 out o/
+# Archangel4148, in and back out \o
