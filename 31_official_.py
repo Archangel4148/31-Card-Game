@@ -45,10 +45,26 @@ def increment_turn_variables(deck_draw: bool):
         upcard_index += 1
 
 
-def get_lowest_card(cards: list[tuple]) -> tuple[int, str]:
+def get_lowest_card(cards: list[tuple[int, str, int]]) -> tuple[int, str, int]:
     """Get the lowest-value card from the provided list, and return its value and suit"""
-    worst_card = min(cards, key=lambda card: card[0])
-    return worst_card[0], worst_card[1]
+    return min(cards, key=lambda card: card[0])
+
+
+def get_hand_value(cards: list[tuple[int, str, int]]) -> float:
+    """Get the value of a hand, accounting for matching suits and three-of-a-kinds"""
+    values = [card[0] for card in cards]
+
+    # Three of a kind
+    if values[0] == values[1] == values[2]:
+        return 30.5
+
+    suit_groups = {}
+    for value, suit, _ in cards:
+        # Add each card to its suit group (or create a new group if it's the first)
+        suit_groups.setdefault(suit, []).append(value)
+
+    # The hand is worth the sum of the largest group of same-suit cards
+    return max(sum(group) for group in suit_groups.values())
 
 
 def draw_card_no_shared_suits():  # add 3 of a kind
@@ -56,14 +72,15 @@ def draw_card_no_shared_suits():  # add 3 of a kind
 
     value_groups = [deck[player_hand_idx][0], deck[player_hand_idx + 1][0], deck[player_hand_idx + 2][0],
                     deck[-upcard_index - 1][0]]
-
+    discard_card = None
     # If the drawn card matches suit with card 1:
     if (deck[-upcard_index - 1][1]) == deck[player_hand_idx][1]:
-        # If the drawn card and card 1 combined aren't the highest value (or tied for highest):
+        # If the drawn card and card 1 combined are the highest value:
         if (deck[-upcard_index - 1][0] + deck[player_hand_idx][0]) > max(value_groups):
             hand_value = (deck[-upcard_index - 1][0]) + (deck[player_hand_idx][0])
             # Discard the lowest of the two non-matching cards
-            upcard_value, upcard_suit = get_lowest_card([deck[player_hand_idx + 1], deck[player_hand_idx + 2]])
+            discard_card = get_lowest_card([deck[player_hand_idx + 1], deck[player_hand_idx + 2]])
+            # upcard_value, upcard_suit = worst_card[0], worst_card[1]
 
 
     # If the drawn card matches suit with card 2:
@@ -72,7 +89,8 @@ def draw_card_no_shared_suits():  # add 3 of a kind
         if ((deck[-upcard_index - 1][0]) + deck[player_hand_idx + 1][0]) > max(value_groups):
             hand_value = (deck[-upcard_index - 1][0]) + (deck[player_hand_idx + 1][0])
             # Discard the lowest of the two non-matching cards
-            upcard_value, upcard_suit = get_lowest_card([deck[player_hand_idx], deck[player_hand_idx + 2]])
+            discard_card = get_lowest_card([deck[player_hand_idx], deck[player_hand_idx + 2]])
+            # upcard_value, upcard_suit = worst_card[0], worst_card[1]
 
     # If the drawn card matches suit with card 3:
     elif (deck[-upcard_index - 1][1]) == deck[player_hand_idx + 2][1]:
@@ -81,15 +99,24 @@ def draw_card_no_shared_suits():  # add 3 of a kind
             hand_value = (deck[-upcard_index - 1][0]) + (deck[player_hand_idx + 2][0])
 
             # Discard the lowest of the two non-matching cards
-            upcard_value, upcard_suit = get_lowest_card([deck[player_hand_idx + 1], deck[player_hand_idx]])
+            discard_card = get_lowest_card([deck[player_hand_idx + 1], deck[player_hand_idx]])
+            # upcard_value, upcard_suit = worst_card[0], worst_card[1]
 
     # If the card matches no suits, or if the combination isn't the maximum value:
     else:
         hand_value = max(value_groups)
         # Discard the lowest card
-        upcard_value, upcard_suit = get_lowest_card(
+        discard_card = get_lowest_card(
             [deck[player_hand_idx], deck[player_hand_idx + 1], deck[player_hand_idx + 2], deck[-upcard_index - 1]]
         )
+
+    if discard_card is not None:
+        # If a card was discarded,
+        upcard_value, upcard_suit = discard_card[0], discard_card[1]
+
+    # hand_value = get_hand_value(
+    #     [deck[player_hand_idx], deck[player_hand_idx + 1], deck[player_hand_idx + 2], deck[-upcard_index - 1]]
+    # )
 
     # Increment the turn variables, and move on to the next player
     increment_turn_variables(deck_draw=True)
@@ -116,7 +143,7 @@ def draw_card_1_2_share_suits():
             upcard_suit = deck[player_hand_idx + 2][1]
         else:
             # Discard the lowest of the matching cards
-            upcard_value, upcard_suit = get_lowest_card([deck[player_hand_idx], deck[player_hand_idx + 1]])
+            upcard_value, upcard_suit, _ = get_lowest_card([deck[player_hand_idx], deck[player_hand_idx + 1]])
 
     # If the drawn card shares a suit with card 3:
     elif deck[-upcard_index - 1][1] == deck[player_hand_idx + 2][1]:
@@ -128,19 +155,19 @@ def draw_card_1_2_share_suits():
                 deck[player_hand_idx + 1][0]:
 
             # Discard the lesser of cards 1 and 2
-            upcard_value, upcard_suit = get_lowest_card([deck[player_hand_idx], deck[player_hand_idx + 1]])
+            upcard_value, upcard_suit, _ = get_lowest_card([deck[player_hand_idx], deck[player_hand_idx + 1]])
 
         # If the drawn card and card 3 combined are less than cards 1 and 2 combined
         elif deck[-upcard_index - 1][0] + deck[player_hand_idx + 2][0] < deck[player_hand_idx][0] + \
                 deck[player_hand_idx + 1][0]:
 
             # Discard the lesser of the drawn card and card 3
-            upcard_value, upcard_suit = get_lowest_card([deck[-upcard_index - 1], deck[player_hand_idx + 2]])
+            upcard_value, upcard_suit, _ = get_lowest_card([deck[-upcard_index - 1], deck[player_hand_idx + 2]])
 
         # If the combination of the drawn card and card 3 is equal to the combination of cards 1 and 2:
         else:
             # Discard the lowest card
-            upcard_value, upcard_suit = get_lowest_card(
+            upcard_value, upcard_suit, _ = get_lowest_card(
                 [deck[-upcard_index - 1], deck[player_hand_idx + 2], deck[player_hand_idx], deck[player_hand_idx + 1]]
             )
 
@@ -159,7 +186,7 @@ def draw_card_1_2_share_suits():
         # If the drawn card, card 1, and card 2 combined are NOT the maximum value:
         else:
             # Discard the least of cards 1, 2, and the drawn card
-            upcard_value, upcard_suit = get_lowest_card(
+            upcard_value, upcard_suit, _ = get_lowest_card(
                 [deck[-upcard_index - 1], deck[player_hand_idx], deck[player_hand_idx + 1]]
             )
 
@@ -191,7 +218,7 @@ def draw_card_1_3_share_suits():
         # If cards 1 and 3 combined are the minimum value:
         else:
             # Discard the lesser of cards 1 and 3
-            upcard_value, upcard_suit = get_lowest_card([deck[player_hand_idx], deck[player_hand_idx + 2]])
+            upcard_value, upcard_suit, _ = get_lowest_card([deck[player_hand_idx], deck[player_hand_idx + 2]])
 
     # If the drawn card shares a suit with card 2:
     elif deck[-upcard_index - 1][1] == deck[player_hand_idx + 1][1]:
@@ -202,19 +229,19 @@ def draw_card_1_3_share_suits():
                 deck[player_hand_idx + 2][0]:
 
             # Discard the lesser of cards 1 and 3
-            upcard_value, upcard_suit = get_lowest_card([deck[player_hand_idx], deck[player_hand_idx + 2]])
+            upcard_value, upcard_suit, _ = get_lowest_card([deck[player_hand_idx], deck[player_hand_idx + 2]])
 
         # If the combination of the drawn card and card 2 is less than the combination of cards 1 and 3:
         elif deck[-upcard_index - 1][0] + deck[player_hand_idx + 1][0] < deck[player_hand_idx][0] + \
                 deck[player_hand_idx + 2][0]:
 
             # Discard the lesser of card 2 and the drawn card
-            upcard_value, upcard_suit = get_lowest_card([deck[-upcard_index - 1], deck[player_hand_idx + 1]])
+            upcard_value, upcard_suit, _ = get_lowest_card([deck[-upcard_index - 1], deck[player_hand_idx + 1]])
 
         # If the combination of the drawn card and card 2 is equal to the combination of cards 1 and 3:
         else:
             # Discard the lowest card
-            upcard_value, upcard_suit = get_lowest_card(
+            upcard_value, upcard_suit, _ = get_lowest_card(
                 [deck[-upcard_index - 1], deck[player_hand_idx + 1], deck[player_hand_idx], deck[player_hand_idx + 2]]
             )
 
@@ -233,7 +260,7 @@ def draw_card_1_3_share_suits():
         # If the combination of cards 1, 3, and the drawn card is less than the value of card 2:
         else:
             # Discard the least of cards 1, 3, and the drawn card
-            upcard_value, upcard_suit = get_lowest_card(
+            upcard_value, upcard_suit, _ = get_lowest_card(
                 [deck[-upcard_index - 1], deck[player_hand_idx], deck[player_hand_idx + 2]]
             )
 
@@ -264,7 +291,7 @@ def draw_card_2_3_share_suits():
         # If cards 2 and 3 combined are the lowest value:
         else:
             # Discard the lesser of cards 2 and 3
-            upcard_value, upcard_suit = get_lowest_card([deck[player_hand_idx + 1], deck[player_hand_idx + 2]])
+            upcard_value, upcard_suit, _ = get_lowest_card([deck[player_hand_idx + 1], deck[player_hand_idx + 2]])
 
     # If the drawn card shares a suit with card 1:
     elif deck[-upcard_index - 1][1] == deck[player_hand_idx][1]:
@@ -276,19 +303,19 @@ def draw_card_2_3_share_suits():
                 deck[player_hand_idx + 2][0]:
 
             # Discard the lesser of cards 2 and 3
-            upcard_value, upcard_suit = get_lowest_card([deck[player_hand_idx + 1], deck[player_hand_idx + 2]])
+            upcard_value, upcard_suit, _ = get_lowest_card([deck[player_hand_idx + 1], deck[player_hand_idx + 2]])
 
         # If card 1 and the drawn card combined are less than cards 2 and 3 combined:
         elif deck[-upcard_index - 1][0] + deck[player_hand_idx][0] < deck[player_hand_idx + 1][0] + \
                 deck[player_hand_idx + 2][0]:
 
             # Discard the lesser of card 1 and the drawn card
-            upcard_value, upcard_suit = get_lowest_card([deck[-upcard_index - 1], deck[player_hand_idx]])
+            upcard_value, upcard_suit, _ = get_lowest_card([deck[-upcard_index - 1], deck[player_hand_idx]])
 
         # If card 1 and the drawn card combined are equal to cards 2 and 3 combined:
         else:
             # Discard the lowest card
-            upcard_value, upcard_suit = get_lowest_card(
+            upcard_value, upcard_suit, _ = get_lowest_card(
                 [deck[-upcard_index - 1], deck[player_hand_idx + 1], deck[player_hand_idx], deck[player_hand_idx + 2]]
             )
 
@@ -306,7 +333,7 @@ def draw_card_2_3_share_suits():
         # If cards 2, 3, and the drawn card combined are less than or equal to the value of card 1:
         else:
             # Discard the least of cards 2, 3, and the drawn card
-            upcard_value, upcard_suit = get_lowest_card(
+            upcard_value, upcard_suit, _ = get_lowest_card(
                 [deck[-upcard_index - 1], deck[player_hand_idx + 1], deck[player_hand_idx + 2]]
             )
 
@@ -409,7 +436,7 @@ for _ in range(iterations):
                 if upcard_value >= sum(hand_card_values):
                     hand_value = upcard_value
                     # Discard the lowest card
-                    upcard_value, upcard_suit = get_lowest_card(
+                    upcard_value, upcard_suit, _ = get_lowest_card(
                         [deck[player_hand_idx], deck[player_hand_idx + 1], deck[player_hand_idx + 2]]
                     )
 
@@ -425,7 +452,7 @@ for _ in range(iterations):
                         hand_card_values = [deck[-upcard_index - 1][0], deck[player_hand_idx][0],
                                             deck[player_hand_idx + 1][0], deck[player_hand_idx + 2][0]]
                         # Discard the lowest card
-                        upcard_value, upcard_suit = get_lowest_card(
+                        upcard_value, upcard_suit, _ = get_lowest_card(
                             [deck[-upcard_index - 1], deck[player_hand_idx], deck[player_hand_idx + 1],
                              deck[player_hand_idx + 2]]
                         )
@@ -443,7 +470,7 @@ for _ in range(iterations):
                         if deck[-upcard_index - 1][0] >= sum(hand_card_values):
                             # Draw from the deck, discarding the worst card
                             hand_value = deck[-upcard_index - 1][0]
-                            upcard_value, upcard_suit = get_lowest_card(
+                            upcard_value, upcard_suit, _ = get_lowest_card(
                                 [deck[player_hand_idx], deck[player_hand_idx + 1], deck[player_hand_idx + 2]]
                             )
 
@@ -473,7 +500,7 @@ for _ in range(iterations):
                                         deck[player_hand_idx + 2][0]]
 
                     # Discard the lowest card
-                    worst_value, worst_suit = get_lowest_card(
+                    worst_value, worst_suit, _ = get_lowest_card(
                         [deck[player_hand_idx], deck[player_hand_idx + 1], deck[player_hand_idx + 2]]
                     )
 
@@ -489,7 +516,7 @@ for _ in range(iterations):
                     # If the drawn card shares a suit:
                     if deck[-upcard_index - 1][1] == deck[player_hand_idx][1]:
                         # Discard the lowest value card
-                        worst_value, worst_suit = get_lowest_card(
+                        worst_value, worst_suit, _ = get_lowest_card(
                             [deck[-upcard_index - 1], deck[player_hand_idx], deck[player_hand_idx + 1],
                              deck[player_hand_idx + 2]]
                         )
@@ -505,7 +532,7 @@ for _ in range(iterations):
                             hand_value = deck[-upcard_index - 1][0]
 
                             # Discard the lowest of the cards already in hand
-                            upcard_value, upcard_suit = get_lowest_card(
+                            upcard_value, upcard_suit, _ = get_lowest_card(
                                 [deck[player_hand_idx], deck[player_hand_idx + 1], deck[player_hand_idx + 2]]
                             )
 
@@ -556,7 +583,7 @@ for _ in range(iterations):
                     hand_value = upcard_value
 
                     # Discard the lowest card in hand
-                    upcard_value, upcard_suit = get_lowest_card(
+                    upcard_value, upcard_suit, _ = get_lowest_card(
                         [deck[player_hand_idx], deck[player_hand_idx + 1], deck[player_hand_idx + 2]]
                     )
 
@@ -576,7 +603,7 @@ for _ in range(iterations):
                     hand_value = upcard_value + deck[player_hand_idx][0]
 
                     # Discard the lowest card
-                    upcard_value, upcard_suit = get_lowest_card(
+                    upcard_value, upcard_suit, _ = get_lowest_card(
                         [deck[player_hand_idx], deck[player_hand_idx + 1], deck[player_hand_idx + 2]]
                     )
 
@@ -596,7 +623,7 @@ for _ in range(iterations):
                     hand_value = upcard_value + deck[player_hand_idx + 1][0]
 
                     # Discard the lowest of the two remaining cards
-                    upcard_value, upcard_suit = get_lowest_card([deck[player_hand_idx], deck[player_hand_idx + 2]])
+                    upcard_value, upcard_suit, _ = get_lowest_card([deck[player_hand_idx], deck[player_hand_idx + 2]])
 
                     # Increment the turn variables, and move on to the next player
                     increment_turn_variables(deck_draw=False)
@@ -613,7 +640,7 @@ for _ in range(iterations):
                     hand_value = upcard_value + deck[player_hand_idx + 2][0]
 
                     # Discard the lowest of the two remaining cards
-                    upcard_value, upcard_suit = get_lowest_card([deck[player_hand_idx + 1], deck[player_hand_idx]])
+                    upcard_value, upcard_suit, _ = get_lowest_card([deck[player_hand_idx + 1], deck[player_hand_idx]])
 
                     # Increment the turn variables, and move on to the next player
                     increment_turn_variables(deck_draw=False)
@@ -636,7 +663,7 @@ for _ in range(iterations):
                     hand_value = upcard_value
 
                     # Discard the lowest card
-                    upcard_value, upcard_suit = get_lowest_card(
+                    upcard_value, upcard_suit, _ = get_lowest_card(
                         [deck[player_hand_idx + 1], deck[player_hand_idx], deck[player_hand_idx + 2]]
                     )
 
@@ -657,7 +684,7 @@ for _ in range(iterations):
                     hand_value = upcard_value + deck[player_hand_idx + 2][0]
 
                     # Discard the lesser of cards 1 and 2
-                    upcard_value, upcard_suit = get_lowest_card([deck[player_hand_idx], deck[player_hand_idx + 1]])
+                    upcard_value, upcard_suit, _ = get_lowest_card([deck[player_hand_idx], deck[player_hand_idx + 1]])
 
                     # Increment the turn variables, and move on to the next player
                     increment_turn_variables(deck_draw=False)
@@ -702,7 +729,7 @@ for _ in range(iterations):
                     hand_value = upcard_value
 
                     # Discard the lowest card
-                    upcard_value, upcard_suit = get_lowest_card(
+                    upcard_value, upcard_suit, _ = get_lowest_card(
                         [deck[player_hand_idx], deck[player_hand_idx + 1], deck[player_hand_idx + 2]]
                     )
 
@@ -723,7 +750,7 @@ for _ in range(iterations):
                     hand_value = upcard_value + deck[player_hand_idx + 1][0]
 
                     # Discard the lesser of cards 1 and 3
-                    upcard_value, upcard_suit = get_lowest_card([deck[player_hand_idx], deck[player_hand_idx + 2]])
+                    upcard_value, upcard_suit, _ = get_lowest_card([deck[player_hand_idx], deck[player_hand_idx + 2]])
 
                     # Increment the turn variables, and move on to the next player
                     increment_turn_variables(deck_draw=False)
@@ -766,7 +793,7 @@ for _ in range(iterations):
                     hand_value = upcard_value
 
                     # Discard the lowest card
-                    upcard_value, upcard_suit = get_lowest_card(
+                    upcard_value, upcard_suit, _ = get_lowest_card(
                         [deck[player_hand_idx + 1], deck[player_hand_idx], deck[player_hand_idx + 2]]
                     )
 
@@ -787,7 +814,8 @@ for _ in range(iterations):
                     hand_value = upcard_value + deck[player_hand_idx][0]
 
                     # Discard the lesser of cards 2 and 3
-                    upcard_value, upcard_suit = get_lowest_card([deck[player_hand_idx + 1], deck[player_hand_idx + 2]])
+                    upcard_value, upcard_suit, _ = get_lowest_card(
+                        [deck[player_hand_idx + 1], deck[player_hand_idx + 2]])
 
                     # Increment the turn variables, and move on to the next player
                     increment_turn_variables(deck_draw=False)
