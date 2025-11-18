@@ -2,13 +2,13 @@
 # Written by Joshua Santy, 7/6/2022
 
 # This code assumes that the first person to go directly after being dealt cards knocks.
-# You can still use this if you want to knock in the first round even if you aren't the first person to go
+# You can still use this if you want to knock in the first round even if you aren"t the first person to go
 
 
 """
 TO USE THIS CODE:
 1. Go to https://www.programiz.com/python-programming/online-compiler/
-2. Clear the existing code that's on the left side (where it says main.py)
+2. Clear the existing code that"s on the left side (where it says main.py)
 3. In its place, copy and paste this entire code WITHOUT ALTERING (ctrl+a, ctrl+c, ctrl+v)
 4. Press run
 5. On the right side of the screen (under Shell), the program will ask you how many players you want (maximum of 13)
@@ -36,7 +36,7 @@ import random
 def increment_turn_variables(deck_draw: bool):
     """Increment turn tracking variables after the player takes a card"""
     global player_hand_idx, current_player_idx, current_player, upcard_index
-    scores[current_player_idx] = hand_value
+    player_scores[current_player_idx] = hand_value
     player_hand_idx = (3 * current_player)
     current_player += 1
     current_player_idx += 1
@@ -60,7 +60,7 @@ def get_hand_value(cards: list[tuple[int, str, int]]) -> float:
 
     suit_groups = {}
     for value, suit, _ in cards:
-        # Add each card to its suit group (or create a new group if it's the first)
+        # Add each card to its suit group (or create a new group if it"s the first)
         suit_groups.setdefault(suit, []).append(value)
 
     # The hand is worth the sum of the largest group of same-suit cards
@@ -102,7 +102,7 @@ def draw_card_no_shared_suits():  # add 3 of a kind
             discard_card = get_lowest_card([deck[player_hand_idx + 1], deck[player_hand_idx]])
             # upcard_value, upcard_suit = worst_card[0], worst_card[1]
 
-    # If the card matches no suits, or if the combination isn't the maximum value:
+    # If the card matches no suits, or if the combination isn"t the maximum value:
     else:
         hand_value = max(value_groups)
         # Discard the lowest card
@@ -113,10 +113,6 @@ def draw_card_no_shared_suits():  # add 3 of a kind
     if discard_card is not None:
         # If a card was discarded,
         upcard_value, upcard_suit = discard_card[0], discard_card[1]
-
-    # hand_value = get_hand_value(
-    #     [deck[player_hand_idx], deck[player_hand_idx + 1], deck[player_hand_idx + 2], deck[-upcard_index - 1]]
-    # )
 
     # Increment the turn variables, and move on to the next player
     increment_turn_variables(deck_draw=True)
@@ -340,27 +336,49 @@ def draw_card_2_3_share_suits():
     # Increment the turn variables, and move on to the next player
     increment_turn_variables(deck_draw=True)
 
+def update_welford(existing_accumulation: tuple[float, float, float], new_value: float) -> tuple[float, float, float]:
+    """Update the accumulation of count, mean, and squared distance from the mean, returning the updated tuple"""
+    (count, mean, m2) = existing_accumulation
+    count += 1
+    delta = new_value - mean
+    mean += delta / count
+    delta2 = new_value - mean
+    m2 += delta * delta2
+    return count, mean, m2
 
-player_count = int(input('Enter number of players: '))
-iterations = int(input('Enter number of iterations: '))
-all_total = 0
+def finalize_welford(existing_accumulation: tuple[float, float, float]) -> tuple[float, float, float]:
+    """Given the accumulated samples, calculate variance and sample variance using Welford's algorithm"""
+    (count, mean, m2) = existing_accumulation
+    if count < 2:
+        raise ValueError("Not enough data to compute variance using Welford algorithm (needs >2 points)")
+    else:
+        (mean, variance, sample_variance) = (mean, m2 / count, m2 / (count - 1))
+        return mean, variance, sample_variance
+    
+############# MAIN FUNCTIONALITY #############
+
+player_count = int(input("Enter number of players: "))
+iterations = int(input("Enter number of iterations: "))
+single_player_total = 0
 total_scores = []
+welford_accumulation = (0, 0, 0)
+
 for _ in range(iterations):
     # Types: 1 = number, 2 = 10, 3 = jack, 4 = queen, 5 = king, 6 = ace
     # Each item: (Value, Suit, Type)
     deck = [
-        (5, 'Club', 1), (10, 'Club', 2), (11, 'Diamond', 6), (10, 'Heart', 2), (6, 'Spade', 1), (3, 'Spade', 1),
-        (10, 'Club', 3), (10, 'Spade', 2), (2, 'Spade', 1), (8, 'Spade', 1), (7, 'Club', 1), (3, 'Heart', 1),
-        (4, 'Spade', 1), (11, 'Club', 6), (5, 'Diamond', 1), (10, 'Heart', 3), (10, 'Diamond', 2), (9, 'Spade', 1),
-        (9, 'Club', 1), (6, 'Heart', 1), (4, 'Heart', 1), (10, 'Diamond', 3), (3, 'Diamond', 1), (6, 'Club', 1),
-        (11, 'Heart', 6), (10, 'Spade', 3), (10, 'Diamond', 4), (10, 'Spade', 4), (5, 'Spade', 1), (7, 'Heart', 1),
-        (6, 'Diamond', 1), (7, 'Diamond', 1), (4, 'Club', 1), (8, 'Heart', 1), (11, 'Spade', 6), (2, 'Club', 1),
-        (3, 'Club', 1), (10, 'Heart', 4), (10, 'Club', 4), (8, 'Club', 1), (2, 'Heart', 1), (9, 'Diamond', 1),
-        (7, 'Spade', 1), (2, 'Diamond', 1), (10, 'Spade', 5), (4, 'Diamond', 1), (10, 'Heart', 5), (9, 'Heart', 1),
-        (8, 'Diamond', 1), (10, 'Club', 5), (5, 'Heart', 1), (10, 'Diamond', 5)
+        (5, "Club", 1), (10, "Club", 2), (11, "Diamond", 6), (10, "Heart", 2), (6, "Spade", 1), (3, "Spade", 1),
+        (10, "Club", 3), (10, "Spade", 2), (2, "Spade", 1), (8, "Spade", 1), (7, "Club", 1), (3, "Heart", 1),
+        (4, "Spade", 1), (11, "Club", 6), (5, "Diamond", 1), (10, "Heart", 3), (10, "Diamond", 2), (9, "Spade", 1),
+        (9, "Club", 1), (6, "Heart", 1), (4, "Heart", 1), (10, "Diamond", 3), (3, "Diamond", 1), (6, "Club", 1),
+        (11, "Heart", 6), (10, "Spade", 3), (10, "Diamond", 4), (10, "Spade", 4), (5, "Spade", 1), (7, "Heart", 1),
+        (6, "Diamond", 1), (7, "Diamond", 1), (4, "Club", 1), (8, "Heart", 1), (11, "Spade", 6), (2, "Club", 1),
+        (3, "Club", 1), (10, "Heart", 4), (10, "Club", 4), (8, "Club", 1), (2, "Heart", 1), (9, "Diamond", 1),
+        (7, "Spade", 1), (2, "Diamond", 1), (10, "Spade", 5), (4, "Diamond", 1), (10, "Heart", 5), (9, "Heart", 1),
+        (8, "Diamond", 1), (10, "Club", 5), (5, "Heart", 1), (10, "Diamond", 5)
     ]
     deck = random.sample(deck, k=len(deck))  # Shuffle the deck
-    scores = []
+    player_scores = []
 
     # First player starts
     player_hand_idx = 0
@@ -375,7 +393,7 @@ for _ in range(iterations):
                 and deck[player_hand_idx][1] != deck[player_hand_idx + 1][1]  # S1 != S2
                 and deck[player_hand_idx][1] != deck[player_hand_idx + 2][1]  # S1 != S3
         ):
-            # Hand is worth the largest card's value
+            # Hand is worth the largest card"s value
             hand_value = max(deck[player_hand_idx][0], deck[player_hand_idx + 1][0], deck[player_hand_idx + 2][0])
 
         # All matching suit:
@@ -401,8 +419,9 @@ for _ in range(iterations):
                 hand_value = max(deck[player_hand_idx + 1][0] + deck[player_hand_idx + 2][0], deck[player_hand_idx][0])
 
         # Hand value is now accurate, add it to the totals
-        scores.append(hand_value)
+        player_scores.append(hand_value)
         total_scores.append(hand_value)
+        welford_accumulation = update_welford(welford_accumulation, hand_value)
 
         # Move on to the next player
         player_hand_idx = (3 * current_player)
@@ -846,26 +865,37 @@ for _ in range(iterations):
                     continue
     # -------------------------------------------------------------------------------------------------------------------------
 
-    other_players_total_score = sum(scores[1:])
+    other_players_total_score = sum(player_scores[1:])
     average = round(other_players_total_score / (player_count - 1), 10)
 
-    all_total += float(average)
+    single_player_total += float(average)
 
-all_total = round(all_total / iterations, 10)
-print(f"\nAverage score of other players after having knocked: {all_total}\n")
+average_player_score = single_player_total / iterations
+print(f"\nAverage score of other players after having knocked: {average_player_score:.10f}\n")
 
-# Find the standard deviation
-score_sum = sum([(total_scores[h] - all_total) ** 2 for h in range(iterations)])
-std_dev = math.sqrt((score_sum / iterations))
-print(f'Standard Deviation: {std_dev}\n')
+# # Find the standard deviation (Naive Method)
+# score_sum = sum([(total_scores[h] - average_player_score) ** 2 for h in range(iterations)])
+# std_dev = math.sqrt((score_sum / iterations))
+# print(f"Standard Deviation (Single-Pass): {std_dev}\n")
+#
+# # Find the standard deviation (Two-Pass Method)
+# n = len(total_scores)
+# mean = sum(total_scores) / n
+# variance = sum((x - mean) ** 2 for x in total_scores) / (n - 1)
+# std_dev_two_pass = math.sqrt(variance)
+# print(f"Standard Deviation (Two-Pass): {std_dev_two_pass}\n")
+
+# Welford's algorithm
+mean, variance, sample_variance = finalize_welford(welford_accumulation)
+std_dev = math.sqrt(variance)
+print(f"Standard Deviation: {std_dev}\n")
 
 # 75th and 25th percentile:
 # 75th percentile = mean + (z * standard deviation), where z is taken from a table (https://www.statology.org/calculate-percentile-from-mean-standard-deviation/)
 # Remember, 75th percentile means that 75% of all the answers are below yours, and 25% are above
-
-percent75 = all_total + (0.67 * std_dev)
-percent25 = all_total + (-0.67 * std_dev)
-print(f'75th percentile: {percent75}')
-print(f'25th percentile: {percent25}')
+percent75 = average_player_score + (0.6745 * std_dev)
+percent25 = average_player_score + (-0.6745 * std_dev)
+print(f"75th percentile: {percent75}")
+print(f"25th percentile: {percent25}")
 
 # MrJoshie333 out o/
