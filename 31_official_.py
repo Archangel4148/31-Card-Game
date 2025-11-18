@@ -101,7 +101,6 @@ def draw_card_no_shared_suits():  # add 3 of a kind
         # If the drawn card and card 3 combined are the maximum value:
         if (drawn_val + c3[0]) > max(value_groups):
             hand_value = drawn_val + (c3[0])
-
             # Discard the lowest of the two non-matching cards
             discard_card = get_lowest_card([c2, c1])
 
@@ -153,13 +152,11 @@ def draw_card_1_2_share_suits():
 
         # If the drawn card and card 3 combined are greater than cards 1 and 2 combined:
         if drawn_val + c3[0] > c1[0] + c2[0]:
-
             # Discard the lesser of cards 1 and 2
             upcard_value, upcard_suit, _ = get_lowest_card([c1, c2])
 
         # If the drawn card and card 3 combined are less than cards 1 and 2 combined
         elif drawn_val + c3[0] < c1[0] + c2[0]:
-
             # Discard the lesser of the drawn card and card 3
             upcard_value, upcard_suit, _ = get_lowest_card([deck[-upcard_index - 1], c3])
 
@@ -880,7 +877,7 @@ std_dev = math.sqrt(variance)
 print(f"Standard Deviation: {std_dev}\n")
 
 # 75th and 25th percentile:
-# 75th percentile = mean + (z * standard deviation), where z is taken from a table (https://www.statology.org/calculate-percentile-from-mean-standard-deviation/)
+# 75th percentile = mean + (z * standard deviation), where z is taken from a table
 # Remember, 75th percentile means that 75% of all the answers are below yours, and 25% are above
 percent75 = average_player_score + (0.6745 * std_dev)
 percent25 = average_player_score + (-0.6745 * std_dev)
