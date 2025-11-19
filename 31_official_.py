@@ -2,7 +2,7 @@
 # Written by Joshua Santy, 7/6/2022
 
 # This code assumes that the first person to go directly after being dealt cards knocks.
-# You can still use this if you want to knock in the first round even if you aren"t the first person to go
+# You can still use this if you want to knock in the first round even if you aren't the first person to go
 
 
 """
@@ -64,28 +64,12 @@ class GameState:
         return self.deck.index(card)
 
 def increment_turn_variables(game_state: GameState, hand_value: float, discarded_card: Card, deck_draw: bool):
-    """Increment turn tracking variables after the player takes a card"""
-
-    print("\n=== INCREMENT TURN DEBUG ===")
-
-    print(f"Deck length: {len(game_state.deck)}")
-
-    # Where is this card expected to be?
-    idx = game_state.get_card_index(discarded_card)
-    print(f"Discarded card: {game_state.deck[idx]} (idx={idx})")
-
-    game_state.upcard_index = idx
-
-    print(f"Current number of deck draws: {game_state.deck_draws}")
-    print(f"Current player before increment: {game_state.current_player}")
-
-    # --- Continue with logic ---
+    """Increment turn tracking variables after the player takes/discards a card"""
+    game_state.upcard_index = game_state.get_card_index(discarded_card)
     game_state.player_scores[game_state.current_player_idx] = hand_value
     game_state.current_player += 1
     if deck_draw:
         game_state.deck_draws += 1
-
-    print("=== END DEBUG ===\n")
 
 
 def get_lowest_card(cards: list[Card]) -> Card:
