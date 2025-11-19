@@ -40,10 +40,9 @@ Card = typing.NewType("Card", tuple[int, str, int])
 class GameState:
     current_player: int
     upcard_index: int
-    upcard_value: str
-    upcard_suit: str
     player_scores: list[int]
     deck: list[Card]
+    deck_draws: int = 1  # Starts after the upcard
 
     @property
     def current_player_idx(self):
@@ -53,15 +52,40 @@ class GameState:
     def player_hand_idx(self):
         return self.current_player_idx * 3
 
+    @property
+    def upcard_value(self):
+        return self.deck[self.upcard_index][0]
+
+    @property
+    def upcard_suit(self):
+        return self.deck[self.upcard_index][1]
+
+    def get_card_index(self, card: Card):
+        return self.deck.index(card)
+
 def increment_turn_variables(game_state: GameState, hand_value: float, discarded_card: Card, deck_draw: bool):
     """Increment turn tracking variables after the player takes a card"""
-    # Update the face-up card
-    game_state.upcard_value, game_state.upcard_suit, _ = discarded_card
+
+    print("\n=== INCREMENT TURN DEBUG ===")
+
+    print(f"Deck length: {len(game_state.deck)}")
+
+    # Where is this card expected to be?
+    idx = game_state.get_card_index(discarded_card)
+    print(f"Discarded card: {game_state.deck[idx]} (idx={idx})")
+
+    game_state.upcard_index = idx
+
+    print(f"Current number of deck draws: {game_state.deck_draws}")
+    print(f"Current player before increment: {game_state.current_player}")
+
+    # --- Continue with logic ---
     game_state.player_scores[game_state.current_player_idx] = hand_value
     game_state.current_player += 1
     if deck_draw:
-        # Increment the deck index (because a card was drawn from the deck)
-        game_state.upcard_index += 1
+        game_state.deck_draws += 1
+
+    print("=== END DEBUG ===\n")
 
 
 def get_lowest_card(cards: list[Card]) -> Card:
@@ -87,7 +111,7 @@ def get_hand_value(cards: list[Card]) -> float:
 
 
 def draw_card_no_shared_suits(game_state: GameState):  # add 3 of a kind
-    drawn = game_state.deck[-game_state.upcard_index - 1]
+    drawn = game_state.deck[-1 - game_state.deck_draws]
     drawn_val, drawn_suit = drawn[0], drawn[1]
 
     c1 = game_state.deck[game_state.player_hand_idx]
@@ -128,7 +152,7 @@ def draw_card_no_shared_suits(game_state: GameState):  # add 3 of a kind
 
 
 def draw_card_1_2_share_suits(game_state: GameState):
-    drawn = game_state.deck[-game_state.upcard_index - 1]
+    drawn = game_state.deck[-1 - game_state.deck_draws]
     drawn_val, drawn_suit = drawn[0], drawn[1]
 
     c1 = game_state.deck[game_state.player_hand_idx]
@@ -189,7 +213,7 @@ def draw_card_1_2_share_suits(game_state: GameState):
 
 
 def draw_card_1_3_share_suits(game_state: GameState):
-    drawn = game_state.deck[-game_state.upcard_index - 1]
+    drawn = game_state.deck[-1 - game_state.deck_draws]
     drawn_val, drawn_suit = drawn[0], drawn[1]
 
     c1 = game_state.deck[game_state.player_hand_idx]
@@ -252,7 +276,7 @@ def draw_card_1_3_share_suits(game_state: GameState):
 
 
 def draw_card_2_3_share_suits(game_state: GameState):
-    drawn = game_state.deck[-game_state.upcard_index - 1]
+    drawn = game_state.deck[-1 - game_state.deck_draws]
     drawn_val, drawn_suit = drawn[0], drawn[1]
 
     c1 = game_state.deck[game_state.player_hand_idx]
@@ -360,8 +384,6 @@ def main():
         game_state = GameState(
             current_player=1,
             upcard_index=None,
-            upcard_value=None,
-            upcard_suit=None,
             player_scores=[],
             deck=random.sample(_deck, k=len(_deck))  # Shuffle the deck
         )
@@ -413,18 +435,19 @@ def main():
 
         # Second draw, first player knocks (Skip P1):
         game_state.current_player = 2
-        game_state.upcard_index = 1
 
-        # Update the initial face-up card
-        game_state.upcard_value = game_state.deck[-game_state.upcard_index][0]
-        game_state.upcard_suit = game_state.deck[-game_state.upcard_index][1]
+        # Update the initial face-up card (Top of the deck)
+        game_state.upcard_index = -1
+        print("Initial Upcard:", game_state.deck[game_state.upcard_index])
 
         # Each player draws, discards, and recalculates hand value
         while game_state.current_player <= player_count:
-            drawn = game_state.deck[-game_state.upcard_index - 1]
+            drawn = game_state.deck[-1 - game_state.deck_draws]
             c1 = game_state.deck[game_state.player_hand_idx]
             c2 = game_state.deck[game_state.player_hand_idx + 1]
             c3 = game_state.deck[game_state.player_hand_idx + 2]
+            print("Drew card:", drawn)
+            print("Hand:", c1, c2, c3, drawn)
 
             hand_value = 0
             # All hand cards are the same suit:
