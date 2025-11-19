@@ -422,7 +422,6 @@ def main():
 
         # Update the initial face-up card (Top of the deck)
         game_state.upcard_index = -1
-        print("Initial Upcard:", game_state.deck[game_state.upcard_index])
 
         # Each player draws, discards, and recalculates hand value
         while game_state.current_player <= player_count:
@@ -430,8 +429,6 @@ def main():
             c1 = game_state.deck[game_state.player_hand_idx]
             c2 = game_state.deck[game_state.player_hand_idx + 1]
             c3 = game_state.deck[game_state.player_hand_idx + 2]
-            print("Drew card:", drawn)
-            print("Hand:", c1, c2, c3, drawn)
 
             hand_value = 0
             # All hand cards are the same suit:
