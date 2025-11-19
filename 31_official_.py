@@ -33,9 +33,11 @@ import math
 import random
 
 
-def increment_turn_variables(deck_draw: bool):
+def increment_turn_variables(discarded_card: tuple[int, str, int], deck_draw: bool):
     """Increment turn tracking variables after the player takes a card"""
-    global player_hand_idx, current_player_idx, current_player, upcard_index
+    global player_hand_idx, current_player_idx, current_player, upcard_index, upcard_value, upcard_suit
+    # Update the face-up card
+    upcard_value, upcard_suit, _ = discarded_card
     player_scores[current_player_idx] = hand_value
     player_hand_idx = (3 * current_player)
     current_player += 1
@@ -106,11 +108,8 @@ def draw_card_no_shared_suits():  # add 3 of a kind
         # Discard the lowest card
         discard_card = get_lowest_card([c1, c2, c3, drawn])
 
-    # Update the face-up card to the discarded card
-    upcard_value, upcard_suit, _ = discard_card
-
     # Increment the turn variables, and move on to the next player
-    increment_turn_variables(deck_draw=True)
+    increment_turn_variables(discard_card, deck_draw=True)
 
 
 def draw_card_1_2_share_suits():
@@ -172,11 +171,8 @@ def draw_card_1_2_share_suits():
             # Discard the least of cards 1, 2, and the drawn card
             discard_card = get_lowest_card([drawn, c1, c2])
 
-    # Update the face-up card to the discarded card
-    upcard_value, upcard_suit, _ = discard_card
-
     # Increment the turn variables, and move on to the next player
-    increment_turn_variables(deck_draw=True)
+    increment_turn_variables(discard_card, deck_draw=True)
 
 
 def draw_card_1_3_share_suits():
@@ -240,11 +236,8 @@ def draw_card_1_3_share_suits():
             # Discard the least of cards 1, 3, and the drawn card
             discard_card = get_lowest_card([drawn, c1, c3])
 
-    # Update the face-up card to the discarded card
-    upcard_value, upcard_suit, _ = discard_card
-
     # Increment the turn variables, and move on to the next player
-    increment_turn_variables(deck_draw=True)
+    increment_turn_variables(discard_card, deck_draw=True)
 
 
 def draw_card_2_3_share_suits():
@@ -306,11 +299,8 @@ def draw_card_2_3_share_suits():
             # Discard the least of cards 2, 3, and the drawn card
             discard_card = get_lowest_card([drawn, c2, c3])
 
-    # Update the face-up card to the discarded card
-    upcard_value, upcard_suit, _ = discard_card
-
     # Increment the turn variables, and move on to the next player
-    increment_turn_variables(deck_draw=True)
+    increment_turn_variables(discard_card, deck_draw=True)
 
 
 def update_welford(existing_accumulation: tuple[float, float, float], new_value: float) -> tuple[float, float, float]:
@@ -342,7 +332,7 @@ single_player_total = 0
 total_scores = []
 welford_accumulation = (0, 0, 0)
 
-for _ in range(iterations):
+for turn in range(iterations):
     # Types: 1 = number, 2 = 10, 3 = jack, 4 = queen, 5 = king, 6 = ace
     # Each item: (Value, Suit, Type)
     deck = [
@@ -356,6 +346,7 @@ for _ in range(iterations):
         (7, "Spade", 1), (2, "Diamond", 1), (10, "Spade", 5), (4, "Diamond", 1), (10, "Heart", 5), (9, "Heart", 1),
         (8, "Diamond", 1), (10, "Club", 5), (5, "Heart", 1), (10, "Diamond", 5)
     ]
+    random.seed(turn)
     deck = random.sample(deck, k=len(deck))  # Shuffle the deck
     player_scores: list[float] = []
 
@@ -369,7 +360,6 @@ for _ in range(iterations):
         c2 = deck[player_hand_idx + 1]
         c3 = deck[player_hand_idx + 2]
 
-        hand_value = 0
         # No matching suits:
         if (
                 c2[1] != c3[1]  # S2 != S3
@@ -436,171 +426,122 @@ for _ in range(iterations):
         ):
             # If face-up card doesn't share the same suit:
             if upcard_suit != c1[1]:
-                hand_card_values = [c1[0], c2[0],
-                                    c3[0]]
+                hand_card_values = [c1[0], c2[0], c3[0]]
                 # If face-up card is greater than (or equal to) the sum of all 3 cards:
                 if upcard_value >= sum(hand_card_values):
                     hand_value = upcard_value
                     # Discard the lowest card
-                    upcard_value, upcard_suit, _ = get_lowest_card(
-                        [c1, c2, c3]
-                    )
+                    discard_card = get_lowest_card([c1, c2, c3])
 
                     # Increment the turn variables, and move on to the next player
-                    increment_turn_variables(deck_draw=False)
-                    continue
+                    increment_turn_variables(discard_card, deck_draw=False)
 
                 # If face-up card is not greater than or equal to the sum of all 3 cards:
                 else:
                     # Draw a card from the top of the deck
                     # If drawn card is the same suit:
                     if drawn[1] == c1[1]:
-                        hand_card_values = [drawn[0], c1[0],
-                                            c2[0], c3[0]]
+                        hand_card_values = [drawn[0], c1[0], c2[0], c3[0]]
                         # Discard the lowest card
-                        upcard_value, upcard_suit, _ = get_lowest_card(
-                            [drawn, c1, c2,
-                             c3]
-                        )
-                        hand_value = sum(hand_card_values) - upcard_value
+                        discard_card = get_lowest_card([drawn, c1, c2, c3])
+                        hand_value = sum(hand_card_values) - discard_card[0]
 
                         # Increment the turn variables, and move on to the next player
-                        increment_turn_variables(deck_draw=True)
-                        continue
+                        increment_turn_variables(discard_card, deck_draw=True)
 
                     # If drawn card doesn't share a suit:
                     else:
                         # If the drawn card is better than the sum of the three cards:
-                        hand_card_values = [c1[0], c2[0],
-                                            c3[0]]
+                        hand_card_values = [c1[0], c2[0], c3[0]]
                         if drawn[0] >= sum(hand_card_values):
                             # Draw from the deck, discarding the worst card
                             hand_value = drawn[0]
-                            upcard_value, upcard_suit, _ = get_lowest_card(
-                                [c1, c2, c3]
-                            )
+                            discard_card = get_lowest_card([c1, c2, c3])
 
                             # Increment the turn variables, and move on to the next player
-                            increment_turn_variables(deck_draw=True)
-                            continue
+                            increment_turn_variables(discard_card, deck_draw=True)
 
                         # If new card is worse the sum of the three cards:
                         else:
                             # Hand value is unchanged, and the face-up card remains the same
-                            hand_value = c1[0] + c2[0] + \
-                                         c3[0]
-                            upcard_value = drawn[0]
-                            upcard_suit = drawn[1]
-                            increment_turn_variables(deck_draw=True)
-                            continue
+                            hand_value = c1[0] + c2[0] + c3[0]
+                            discard_card = drawn
+                            increment_turn_variables(discard_card, deck_draw=True)
 
             # If face-up card is the same suit:
             elif upcard_suit == c1[1]:
                 # If face-up is greater than at least 1 of the cards [otherwise newcard]:
-                if (
-                        upcard_value > c1[0]
-                        or upcard_value > c2[0]
-                        or upcard_value > c3[0]
-                ):
-                    hand_card_values = [c1[0], c2[0],
-                                        c3[0]]
+                if upcard_value > c1[0] or upcard_value > c2[0] or upcard_value > c3[0]:
+                    hand_card_values = [c1[0], c2[0], c3[0]]
 
                     # Discard the lowest card
-                    worst_value, worst_suit, _ = get_lowest_card(
-                        [c1, c2, c3]
-                    )
+                    discard_card = get_lowest_card([c1, c2, c3])
 
-                    hand_value = (hand_value + sum(hand_card_values) + upcard_value) - worst_value
-                    upcard_value = worst_value
-                    upcard_suit = worst_suit
+                    hand_value = (hand_value + sum(hand_card_values) + upcard_value) - discard_card[0]
 
                 # If face-up card is not greater than any of the cards:
                 # (Draw a card from the top of the deck)
                 else:
-                    hand_card_values = [drawn[0], c1[0],
-                                        c2[0], c3[0]]
+                    hand_card_values = [drawn[0], c1[0], c2[0], c3[0]]
                     # If the drawn card shares a suit:
                     if drawn[1] == c1[1]:
                         # Discard the lowest value card
-                        worst_value, worst_suit, _ = get_lowest_card(
-                            [drawn, c1, c2,
-                             c3]
-                        )
-                        hand_value = sum(hand_card_values) - worst_value
-                        upcard_value = worst_value
-                        upcard_suit = worst_suit
+                        discard_card = get_lowest_card([drawn, c1, c2, c3])
+                        hand_value = sum(hand_card_values) - discard_card[0]
 
                     # If the drawn card doesn't share a suit:
                     else:
                         # If the drawn card is greater than or equal to the sum of the three cards:
-                        if drawn[0] >= (
-                                c1[0] + c2[0] + c3[0]):
+                        if drawn[0] >= (c1[0] + c2[0] + c3[0]):
                             hand_value = drawn[0]
 
                             # Discard the lowest of the cards already in hand
-                            upcard_value, upcard_suit, _ = get_lowest_card(
-                                [c1, c2, c3]
-                            )
+                            discard_card = get_lowest_card([c1, c2, c3])
 
                         # If the drawn card is worse than the sum of the three cards:
                         else:
-                            hand_value = c1[0] + c2[0] + \
-                                         c3[0]
+                            hand_value = c1[0] + c2[0] + c3[0]
                             # Discard the drawn card, leaving hand the same
-                            upcard_value = drawn[0]
-                            upcard_suit = drawn[1]
+                            discard_card = drawn
 
                 # Increment the turn variables, and move to the next player
-                increment_turn_variables(deck_draw=False)
-                continue
+                increment_turn_variables(discard_card, deck_draw=False)
 
         # -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         # No matching suits:
-        if c1[1] != c3[1] and c1[1] != \
-                c2[1] and c2[1] != c3[1]:
-
-            hand_card_values = [c1[0], c2[0],
-                                c3[0]]
+        if c1[1] != c3[1] and c1[1] != c2[1] and c2[1] != c3[1]:
+            hand_card_values = [c1[0], c2[0], c3[0]]
 
             # Check for three of a kind:
             if c1[2] == 1:
-                three_of_a_kind = c1[0] == c2[0] == c3[
-                    0]
+                three_of_a_kind = c1[0] == c2[0] == c3[0]
             else:
                 # For face cards, use card "type" (index 2) instead of base number
-                three_of_a_kind = c1[2] == c2[2] == c3[
-                    2]
+                three_of_a_kind = c1[2] == c2[2] == c3[2]
 
             # If player has a three of a kind:
             if three_of_a_kind:
                 hand_value = 30.5
                 # Discard the drawn card
-                upcard_value = drawn[0]
-                upcard_suit = drawn[1]
-                increment_turn_variables(deck_draw=True)
-                continue
+                discard_card = drawn
+                increment_turn_variables(discard_card, deck_draw=True)
 
             # If the face-up card doesn't share a suit:
-            if upcard_suit != c1[1] and upcard_suit != c2[
-                1] and upcard_suit != c3[1]:
+            elif upcard_suit != c1[1] and upcard_suit != c2[1] and upcard_suit != c3[1]:
                 # TODO: Perhaps if upcard is lower than 5 then you choose from the deck, not just the upcard
                 # If the face-up card is the highest:
                 if upcard_value > max(hand_card_values):
                     hand_value = upcard_value
 
                     # Discard the lowest card in hand
-                    upcard_value, upcard_suit, _ = get_lowest_card(
-                        [c1, c2, c3]
-                    )
+                    discard_card = get_lowest_card([c1, c2, c3])
 
                     # Increment the turn variables, and move to the next player
-                    increment_turn_variables(deck_draw=False)
-                    continue
+                    increment_turn_variables(discard_card, deck_draw=False)
 
                 # If the drawn card is the lowest or tied with the highest:
                 else:
                     draw_card_no_shared_suits()
-                    continue
 
             # If the face-up card shares a suit with card 1:
             elif upcard_suit == c1[1]:
@@ -609,18 +550,14 @@ for _ in range(iterations):
                     hand_value = upcard_value + c1[0]
 
                     # Discard the lowest card
-                    upcard_value, upcard_suit, _ = get_lowest_card(
-                        [c1, c2, c3]
-                    )
+                    discard_card = get_lowest_card([c1, c2, c3])
 
                     # Increment the turn variables, and move on to the next player
-                    increment_turn_variables(deck_draw=False)
-                    continue
+                    increment_turn_variables(discard_card, deck_draw=False)
 
                 # If the face-up card and card 1 combined are NOT the maximum value:
                 else:
                     draw_card_no_shared_suits()
-                    continue
 
             # If the face-up card shares a suit with card 2:
             elif upcard_suit == c2[1]:
@@ -629,15 +566,13 @@ for _ in range(iterations):
                     hand_value = upcard_value + c2[0]
 
                     # Discard the lowest of the two remaining cards
-                    upcard_value, upcard_suit, _ = get_lowest_card([c1, c3])
+                    discard_card = get_lowest_card([c1, c3])
 
                     # Increment the turn variables, and move on to the next player
-                    increment_turn_variables(deck_draw=False)
-                    continue
+                    increment_turn_variables(discard_card, deck_draw=False)
                 # If the face-up card and card 2 combined are NOT the maximum value:
                 else:
                     draw_card_no_shared_suits()
-                    continue
 
             # If the face-up card shares a suit with card 3:
             elif upcard_suit == c3[1]:
@@ -646,210 +581,167 @@ for _ in range(iterations):
                     hand_value = upcard_value + c3[0]
 
                     # Discard the lowest of the two remaining cards
-                    upcard_value, upcard_suit, _ = get_lowest_card([c2, c1])
+                    discard_card = get_lowest_card([c2, c1])
 
                     # Increment the turn variables, and move on to the next player
-                    increment_turn_variables(deck_draw=False)
-                    continue
+                    increment_turn_variables(discard_card, deck_draw=False)
                 # If the face-up card and card 3 combined are NOT the maximum value:
                 else:
                     draw_card_no_shared_suits()
-                    continue
 
         # --------------------------------------------------------------------------------------------------------------------------------------------------
         # If cards 1 and 2 share suits:
-        if c1[1] == c2[1] and c1[1] != \
-                c3[1]:
+        if c1[1] == c2[1] and c1[1] != c3[1]:
 
             # If the face-up card shares no suits:
             if upcard_suit != c3[1] and upcard_suit != c2[1]:
                 # If the face-up card is the maximum value:
-                if upcard_value >= c3[0] and upcard_value >= (
-                        c2[0] + c1[0]):
+                if upcard_value >= c3[0] and upcard_value >= (c2[0] + c1[0]):
                     hand_value = upcard_value
 
                     # Discard the lowest card
-                    upcard_value, upcard_suit, _ = get_lowest_card(
-                        [c2, c1, c3]
-                    )
+                    discard_card = get_lowest_card([c2, c1, c3])
 
                     # Increment the turn variables, and move on to the next player
-                    increment_turn_variables(deck_draw=False)
-                    continue
+                    increment_turn_variables(discard_card, deck_draw=False)
 
                 # If the face-up card is NOT the maximum value:
                 else:
                     draw_card_1_2_share_suits()
-                    continue
 
             # If the face-up card shares a suit with card 3:
             elif upcard_suit == c3[1]:
                 # If the face-up card and card 3 are greater than cards 1 and 2:
-                if (upcard_value + c3[0]) > (
-                        c1[0] + c2[0]):
+                if (upcard_value + c3[0]) > (c1[0] + c2[0]):
                     hand_value = upcard_value + c3[0]
 
                     # Discard the lesser of cards 1 and 2
-                    upcard_value, upcard_suit, _ = get_lowest_card([c1, c2])
+                    discard_card = get_lowest_card([c1, c2])
 
                     # Increment the turn variables, and move on to the next player
-                    increment_turn_variables(deck_draw=False)
-                    continue
+                    increment_turn_variables(discard_card, deck_draw=False)
 
                 # If cards 1 and 2 combined are greater than the face-up card and card 3 combined:
                 else:
                     draw_card_1_2_share_suits()
-                    continue
 
             # If the face-up card shares a suit with cards 1 and 2:
             elif upcard_suit == c2[1]:
                 # If cards 1, 2 and the face-up card combined are greater than or equal to card 3:
-                if (upcard_value + c2[0] + (c1[0]) >=
-                        c3[0]):
+                if upcard_value + c2[0] + (c1[0]) >= c3[0]:
                     hand_value = upcard_value + c2[0] + c1[0]
                     # Discard card 3
-                    upcard_value = c3[0]
-                    upcard_suit = c3[1]
+                    discard_card = c3
 
                     # Increment the turn variables, and move on to the next player
-                    increment_turn_variables(deck_draw=False)
-                    continue
+                    increment_turn_variables(discard_card, deck_draw=False)
                 # If card 3 is greater than the cards 1, 2, and the face-up card combined:
                 else:
                     draw_card_1_2_share_suits()
-                    continue
 
         # --------------------------------------------------------------------------------------------------------------------------
         # If cards 1 and 3 share suits:
-        if c1[1] == c3[1] and c1[1] != \
-                c2[1] and c2[1] != c3[1]:
+        if c1[1] == c3[1] and c1[1] != c2[1] and c2[1] != c3[1]:
 
-            hand_card_values = [c1[0], c2[0],
-                                c3[0]]
+            hand_card_values = [c1[0], c2[0], c3[0]]
 
             # If the face-up card shares no suits:
             if upcard_suit != c3[1] and upcard_suit != c2[1]:
                 # If the face-up card is the maximum value:
-                if upcard_value >= c2[0] and upcard_value >= (
-                        c3[0] + c1[0]):
+                if upcard_value >= c2[0] and upcard_value >= (c3[0] + c1[0]):
                     hand_value = upcard_value
 
                     # Discard the lowest card
-                    upcard_value, upcard_suit, _ = get_lowest_card(
-                        [c1, c2, c3]
-                    )
+                    discard_card = get_lowest_card([c1, c2, c3])
 
                     # Increment the turn variables, and move on to the next player
-                    increment_turn_variables(deck_draw=False)
-                    continue
+                    increment_turn_variables(discard_card, deck_draw=False)
 
                 # If card 2 or the combination of cards 1 and 3 are max:
                 else:
                     draw_card_1_3_share_suits()
-                    continue
 
             # If the face-up card shares a suit with card 2:
             elif upcard_suit == c2[1]:
                 # If the face-up card and card 2 combined are greater than cards 1 and 3 combined:
-                if (upcard_value + c2[0]) > (
-                        c1[0] + c3[0]):
+                if (upcard_value + c2[0]) > (c1[0] + c3[0]):
                     hand_value = upcard_value + c2[0]
 
                     # Discard the lesser of cards 1 and 3
-                    upcard_value, upcard_suit, _ = get_lowest_card([c1, c3])
+                    discard_card = get_lowest_card([c1, c3])
 
                     # Increment the turn variables, and move on to the next player
-                    increment_turn_variables(deck_draw=False)
-                    continue
+                    increment_turn_variables(discard_card, deck_draw=False)
 
                 # If cards 1 and 3 combined are greater than the face-up card and card 2 combined:
                 else:
                     draw_card_1_3_share_suits()
-                    continue
 
             # If the face-up card shares a suit with cards 1 and 3:
             elif upcard_suit == c1[1]:
                 # If the face-up card and cards 1 and 3 combined are greater than or equal to card 2:
-                if (upcard_value + c3[0] + (c1[0]) >=
-                        c2[0]):
+                if upcard_value + c3[0] + (c1[0]) >= c2[0]:
                     hand_value = upcard_value + c3[0] + c1[0]
                     # Discard card 2
-                    upcard_value = c2[0]
-                    upcard_suit = c2[1]
+                    discard_card = c2
 
                     # Increment the turn variables, and move on to the next player
-                    increment_turn_variables(deck_draw=False)
-                    continue
+                    increment_turn_variables(discard_card, deck_draw=False)
 
                 # If card 2 is greater than the face-up card, card 1, and card 3 combined:
                 else:
                     draw_card_1_3_share_suits()
-                    continue
 
         # ------------------------------------------------------------------------------------------------------------------------
         # If cards 2 and 3 share suits:
-        if c1[1] != c3[1] and c1[1] != \
-                c2[1] and c2[1] == c3[1]:
+        if c1[1] != c3[1] and c1[1] != c2[1] and c2[1] == c3[1]:
 
             # If the face-up card shares no suits:
             if upcard_suit != c1[1] and upcard_suit != c2[1]:
                 # If the face-up card is the maximum value:
-                if upcard_value >= c1[0] and upcard_value >= (
-                        c2[0] + c3[0]):
+                if upcard_value >= c1[0] and upcard_value >= (c2[0] + c3[0]):
                     hand_value = upcard_value
 
                     # Discard the lowest card
-                    upcard_value, upcard_suit, _ = get_lowest_card(
-                        [c2, c1, c3]
-                    )
+                    discard_card = get_lowest_card([c2, c1, c3])
 
                     # Increment the turn variables, and move on to the next player
-                    increment_turn_variables(deck_draw=False)
-                    continue
+                    increment_turn_variables(discard_card, deck_draw=False)
 
                 # If card 1 or cards 3 and 2 combined are max:
                 else:
                     draw_card_2_3_share_suits()
-                    continue
 
             # If the face-up card shares a suit with card 1:
             elif upcard_suit == c1[1]:
                 # If the face-up card and card 1 combined are greater than cards 2 and 3 combined:
-                if (upcard_value + c1[0]) > (
-                        c3[0] + c2[0]):
+                if (upcard_value + c1[0]) > (c3[0] + c2[0]):
                     hand_value = upcard_value + c1[0]
 
                     # Discard the lesser of cards 2 and 3
-                    upcard_value, upcard_suit, _ = get_lowest_card(
-                        [c2, c3])
+                    discard_card = get_lowest_card([c2, c3])
 
                     # Increment the turn variables, and move on to the next player
-                    increment_turn_variables(deck_draw=False)
-                    continue
+                    increment_turn_variables(discard_card, deck_draw=False)
 
                 # If cards 3 and 2 combined are greater than the face-up card and card 1 combined:
                 else:
                     draw_card_2_3_share_suits()
-                    continue
 
             # If the face-up card shares a suit with cards 3 and 2:
             elif upcard_suit == c2[1]:
                 # If the face-up card, card 3, and card 2 combined are greater than or equal to card 1:
-                if (upcard_value + c2[0] + (c3[0]) >=
-                        c1[0]):
+                if upcard_value + c2[0] + (c3[0]) >= c1[0]:
                     hand_value = upcard_value + c2[0] + c3[0]
                     # Discard card 1
-                    upcard_value = c1[0]
-                    upcard_suit = c1[1]
+                    discard_card = c1
 
                     # Increment the turn variables, and move on to the next player
-                    increment_turn_variables(deck_draw=False)
-                    continue
+                    increment_turn_variables(discard_card, deck_draw=False)
 
                 # If card 1 is greater than the face-up card, card 3, and card 2 combined:
                 else:
                     draw_card_2_3_share_suits()
-                    continue
     # -------------------------------------------------------------------------------------------------------------------------
 
     other_players_total_score = sum(player_scores[1:])
