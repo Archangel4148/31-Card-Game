@@ -1,0 +1,471 @@
+P2 : [(11, 'Diamond', 6), (10, 'Diamond', 2), (4, 'Club', 1), (4, 'Spade', 1)] -> (4, 'Spade', 1)
+P3 : [(7, 'Diamond', 1), (10, 'Spade', 3), (6, 'Heart', 1), (4, 'Diamond', 1)] -> (6, 'Heart', 1)
+P4 : [(6, 'Diamond', 1), (3, 'Diamond', 1), (10, 'Heart', 4), (4, 'Diamond', 1)] -> (3, 'Diamond', 1)
+============DIFFERENCE=============== (10, 'Heart', 4)
+
+P2 : [(6, 'Spade', 1), (10, 'Diamond', 2), (10, 'Spade', 2), (8, 'Spade', 1)] -> (10, 'Diamond', 2)
+P3 : [(7, 'Diamond', 1), (5, 'Spade', 1), (6, 'Diamond', 1), (10, 'Heart', 4)] -> (5, 'Spade', 1)
+P4 : [(9, 'Diamond', 1), (11, 'Heart', 6), (11, 'Club', 6), (10, 'Heart', 4)] -> (9, 'Diamond', 1)
+
+P2 : [(6, 'Club', 1), (7, 'Club', 1), (7, 'Spade', 1), (7, 'Heart', 1)] -> (7, 'Heart', 1)
+============DIFFERENCE=============== (6, 'Club', 1)
+P3 : [(6, 'Heart', 1), (10, 'Diamond', 2), (10, 'Club', 4), (8, 'Spade', 1)] -> (6, 'Heart', 1)
+P4 : [(11, 'Club', 6), (2, 'Diamond', 1), (11, 'Diamond', 6), (8, 'Spade', 1)] -> (8, 'Spade', 1)
+
+P2 : [(2, 'Spade', 1), (6, 'Club', 1), (10, 'Club', 4), (5, 'Spade', 1)] -> (2, 'Spade', 1)
+P3 : [(6, 'Diamond', 1), (2, 'Heart', 1), (5, 'Heart', 1), (5, 'Spade', 1)] -> (5, 'Spade', 1)
+P4 : [(6, 'Spade', 1), (10, 'Heart', 5), (5, 'Club', 1), (10, 'Heart', 2)] -> (5, 'Club', 1)
+
+P2 : [(10, 'Heart', 5), (10, 'Spade', 3), (6, 'Diamond', 1), (3, 'Diamond', 1)] -> (6, 'Diamond', 1)
+============DIFFERENCE=============== (3, 'Diamond', 1)
+P3 : [(8, 'Spade', 1), (3, 'Spade', 1), (6, 'Spade', 1), (3, 'Diamond', 1)] -> (3, 'Diamond', 1)
+P4 : [(10, 'Club', 2), (9, 'Heart', 1), (2, 'Club', 1), (8, 'Club', 1)] -> (9, 'Heart', 1)
+
+P2 : [(3, 'Diamond', 1), (10, 'Spade', 5), (9, 'Diamond', 1), (9, 'Club', 1)] -> (9, 'Club', 1)
+P3 : [(8, 'Heart', 1), (10, 'Club', 2), (7, 'Heart', 1), (8, 'Spade', 1)] -> (7, 'Heart', 1)
+============DIFFERENCE=============== (8, 'Spade', 1)
+P4 : [(10, 'Heart', 3), (10, 'Heart', 5), (10, 'Heart', 2), (8, 'Spade', 1)] -> (8, 'Spade', 1)
+
+P2 : [(7, 'Diamond', 1), (10, 'Diamond', 2), (11, 'Diamond', 6), (2, 'Diamond', 1)] -> (2, 'Diamond', 1)
+P3 : [(5, 'Club', 1), (8, 'Spade', 1), (7, 'Spade', 1), (6, 'Spade', 1)] -> (5, 'Club', 1)
+P4 : [(10, 'Heart', 4), (6, 'Diamond', 1), (6, 'Club', 1), (8, 'Club', 1)] -> (6, 'Diamond', 1)
+
+P2 : [(9, 'Diamond', 1), (10, 'Heart', 2), (6, 'Spade', 1), (8, 'Club', 1)] -> (9, 'Diamond', 1)
+============DIFFERENCE=============== (6, 'Spade', 1)
+P3 : [(11, 'Spade', 6), (10, 'Club', 3), (6, 'Club', 1), (8, 'Club', 1)] -> (11, 'Spade', 6)
+P4 : [(10, 'Heart', 4), (9, 'Heart', 1), (4, 'Club', 1), (7, 'Diamond', 1)] -> (4, 'Club', 1)
+
+P2 : [(2, 'Spade', 1), (4, 'Spade', 1), (4, 'Diamond', 1), (10, 'Diamond', 3)] -> (4, 'Diamond', 1)
+============DIFFERENCE=============== (2, 'Spade', 1)
+P3 : [(11, 'Diamond', 6), (3, 'Spade', 1), (8, 'Diamond', 1), (10, 'Diamond', 3)] -> (3, 'Spade', 1)
+P4 : [(10, 'Heart', 3), (4, 'Club', 1), (11, 'Club', 6), (10, 'Diamond', 3)] -> (10, 'Diamond', 3)
+
+P2 : [(9, 'Spade', 1), (2, 'Spade', 1), (3, 'Heart', 1), (10, 'Heart', 3)] -> (2, 'Spade', 1)
+P3 : [(2, 'Diamond', 1), (5, 'Club', 1), (10, 'Diamond', 3), (8, 'Heart', 1)] -> (5, 'Club', 1)
+P4 : [(4, 'Club', 1), (10, 'Diamond', 5), (10, 'Club', 4), (10, 'Heart', 5)] -> (10, 'Diamond', 5)
+============DIFFERENCE=============== (10, 'Heart', 5)
+
+P2 : [(6, 'Diamond', 1), (10, 'Diamond', 5), (5, 'Club', 1), (10, 'Heart', 4)] -> (5, 'Club', 1)
+P3 : [(11, 'Club', 6), (7, 'Heart', 1), (7, 'Diamond', 1), (10, 'Heart', 4)] -> (7, 'Heart', 1)
+============DIFFERENCE=============== (7, 'Diamond', 1)
+P4 : [(9, 'Spade', 1), (9, 'Diamond', 1), (7, 'Club', 1), (10, 'Heart', 4)] -> (7, 'Club', 1)
+
+P2 : [(7, 'Heart', 1), (10, 'Diamond', 5), (4, 'Club', 1), (6, 'Spade', 1)] -> (7, 'Heart', 1)
+============DIFFERENCE=============== (4, 'Club', 1)
+P3 : [(10, 'Heart', 4), (4, 'Spade', 1), (3, 'Heart', 1), (6, 'Spade', 1)] -> (4, 'Spade', 1)
+P4 : [(10, 'Heart', 5), (6, 'Diamond', 1), (2, 'Heart', 1), (6, 'Spade', 1)] -> (6, 'Spade', 1)
+
+P2 : [(8, 'Heart', 1), (10, 'Club', 5), (3, 'Diamond', 1), (10, 'Heart', 2)] -> (3, 'Diamond', 1)
+P3 : [(8, 'Spade', 1), (11, 'Heart', 6), (5, 'Club', 1), (10, 'Heart', 2)] -> (5, 'Club', 1)
+P4 : [(6, 'Club', 1), (10, 'Diamond', 5), (5, 'Heart', 1), (2, 'Spade', 1)] -> (5, 'Heart', 1)
+============DIFFERENCE=============== (2, 'Spade', 1)
+
+P2 : [(10, 'Club', 5), (3, 'Heart', 1), (9, 'Diamond', 1), (8, 'Heart', 1)] -> (3, 'Heart', 1)
+============DIFFERENCE=============== (9, 'Diamond', 1)
+P3 : [(5, 'Diamond', 1), (7, 'Spade', 1), (8, 'Spade', 1), (8, 'Heart', 1)] -> (5, 'Diamond', 1)
+P4 : [(4, 'Diamond', 1), (10, 'Heart', 5), (9, 'Heart', 1), (10, 'Diamond', 5)] -> (4, 'Diamond', 1)
+
+P2 : [(8, 'Diamond', 1), (9, 'Diamond', 1), (8, 'Heart', 1), (2, 'Heart', 1)] -> (2, 'Heart', 1)
+P3 : [(10, 'Heart', 3), (9, 'Spade', 1), (10, 'Diamond', 2), (4, 'Spade', 1)] -> (9, 'Spade', 1)
+============DIFFERENCE=============== (10, 'Heart', 3)
+P4 : [(9, 'Club', 1), (6, 'Spade', 1), (5, 'Spade', 1), (4, 'Spade', 1)] -> (9, 'Club', 1)
+
+P2 : [(9, 'Heart', 1), (11, 'Diamond', 6), (7, 'Club', 1), (8, 'Diamond', 1)] -> (7, 'Club', 1)
+P3 : [(10, 'Heart', 3), (10, 'Club', 2), (10, 'Heart', 2), (6, 'Spade', 1)] -> (6, 'Spade', 1)
+P4 : [(8, 'Spade', 1), (6, 'Club', 1), (4, 'Diamond', 1), (2, 'Spade', 1)] -> (4, 'Diamond', 1)
+
+P2 : [(9, 'Club', 1), (10, 'Diamond', 4), (5, 'Diamond', 1), (10, 'Heart', 2)] -> (5, 'Diamond', 1)
+============DIFFERENCE=============== (9, 'Club', 1)
+P3 : [(5, 'Spade', 1), (5, 'Club', 1), (9, 'Heart', 1), (10, 'Heart', 2)] -> (5, 'Club', 1)
+============DIFFERENCE=============== (5, 'Spade', 1)
+P4 : [(7, 'Spade', 1), (10, 'Diamond', 2), (10, 'Heart', 3), (2, 'Heart', 1)] -> (7, 'Spade', 1)
+
+P2 : [(6, 'Club', 1), (9, 'Club', 1), (3, 'Heart', 1), (5, 'Diamond', 1)] -> (3, 'Heart', 1)
+P3 : [(4, 'Diamond', 1), (11, 'Spade', 6), (7, 'Spade', 1), (7, 'Heart', 1)] -> (4, 'Diamond', 1)
+P4 : [(9, 'Spade', 1), (10, 'Spade', 2), (10, 'Club', 2), (8, 'Club', 1)] -> (8, 'Club', 1)
+
+P2 : [(5, 'Spade', 1), (10, 'Diamond', 3), (10, 'Heart', 3), (9, 'Spade', 1)] -> (10, 'Diamond', 3)
+P3 : [(4, 'Spade', 1), (7, 'Diamond', 1), (2, 'Heart', 1), (5, 'Diamond', 1)] -> (2, 'Heart', 1)
+P4 : [(10, 'Spade', 5), (10, 'Diamond', 5), (6, 'Diamond', 1), (5, 'Diamond', 1)] -> (10, 'Spade', 5)
+
+P2 : [(10, 'Spade', 2), (4, 'Club', 1), (4, 'Spade', 1), (10, 'Heart', 3)] -> (4, 'Club', 1)
+P3 : [(10, 'Spade', 3), (3, 'Diamond', 1), (10, 'Club', 5), (10, 'Heart', 3)] -> (3, 'Diamond', 1)
+P4 : [(9, 'Club', 1), (10, 'Heart', 4), (8, 'Spade', 1), (10, 'Heart', 3)] -> (8, 'Spade', 1)
+
+P2 : [(8, 'Spade', 1), (10, 'Diamond', 2), (5, 'Heart', 1), (6, 'Heart', 1)] -> (5, 'Heart', 1)
+============DIFFERENCE=============== (8, 'Spade', 1)
+P3 : [(2, 'Heart', 1), (10, 'Club', 3), (4, 'Heart', 1), (6, 'Heart', 1)] -> (10, 'Club', 3)
+P4 : [(3, 'Club', 1), (7, 'Club', 1), (10, 'Club', 2), (6, 'Heart', 1)] -> (3, 'Club', 1)
+============DIFFERENCE=============== (6, 'Heart', 1)
+
+P2 : [(5, 'Heart', 1), (2, 'Heart', 1), (9, 'Club', 1), (9, 'Heart', 1)] -> (2, 'Heart', 1)
+============DIFFERENCE=============== (9, 'Club', 1)
+P3 : [(6, 'Diamond', 1), (11, 'Club', 6), (4, 'Diamond', 1), (9, 'Heart', 1)] -> (9, 'Heart', 1)
+============DIFFERENCE=============== (4, 'Diamond', 1)
+P4 : [(4, 'Club', 1), (3, 'Heart', 1), (7, 'Spade', 1), (5, 'Spade', 1)] -> (4, 'Club', 1)
+============DIFFERENCE=============== (3, 'Heart', 1)
+
+P2 : [(8, 'Club', 1), (5, 'Spade', 1), (3, 'Heart', 1), (3, 'Club', 1)] -> (5, 'Spade', 1)
+============DIFFERENCE=============== (3, 'Heart', 1)
+P3 : [(10, 'Spade', 5), (10, 'Spade', 2), (9, 'Diamond', 1), (3, 'Club', 1)] -> (9, 'Diamond', 1)
+============DIFFERENCE=============== (3, 'Club', 1)
+P4 : [(3, 'Diamond', 1), (3, 'Spade', 1), (5, 'Diamond', 1), (3, 'Club', 1)] -> (3, 'Spade', 1)
+============DIFFERENCE=============== (5, 'Diamond', 1)
+
+P2 : [(10, 'Club', 2), (10, 'Heart', 4), (6, 'Heart', 1), (2, 'Club', 1)] -> (10, 'Club', 2)
+============DIFFERENCE=============== (2, 'Club', 1)
+P3 : [(10, 'Spade', 4), (11, 'Heart', 6), (8, 'Heart', 1), (2, 'Club', 1)] -> (2, 'Club', 1)
+P4 : [(3, 'Diamond', 1), (2, 'Spade', 1), (4, 'Spade', 1), (9, 'Diamond', 1)] -> (2, 'Spade', 1)
+
+P2 : [(3, 'Heart', 1), (11, 'Club', 6), (7, 'Club', 1), (2, 'Heart', 1)] -> (3, 'Heart', 1)
+============DIFFERENCE=============== (2, 'Heart', 1)
+P3 : [(4, 'Spade', 1), (10, 'Heart', 5), (7, 'Spade', 1), (2, 'Heart', 1)] -> (4, 'Spade', 1)
+P4 : [(3, 'Spade', 1), (8, 'Spade', 1), (9, 'Club', 1), (2, 'Heart', 1)] -> (9, 'Club', 1)
+============DIFFERENCE=============== (2, 'Heart', 1)
+
+P2 : [(11, 'Club', 6), (6, 'Heart', 1), (2, 'Heart', 1), (10, 'Diamond', 5)] -> (2, 'Heart', 1)
+P3 : [(6, 'Diamond', 1), (11, 'Diamond', 6), (10, 'Diamond', 2), (10, 'Diamond', 5)] -> (6, 'Diamond', 1)
+P4 : [(10, 'Spade', 5), (9, 'Heart', 1), (3, 'Club', 1), (6, 'Club', 1)] -> (3, 'Club', 1)
+
+P2 : [(11, 'Club', 6), (10, 'Spade', 4), (10, 'Club', 4), (8, 'Diamond', 1)] -> (8, 'Diamond', 1)
+P3 : [(11, 'Spade', 6), (10, 'Heart', 2), (2, 'Spade', 1), (9, 'Diamond', 1)] -> (9, 'Diamond', 1)
+P4 : [(6, 'Diamond', 1), (11, 'Diamond', 6), (8, 'Club', 1), (10, 'Club', 5)] -> (8, 'Club', 1)
+============DIFFERENCE=============== (6, 'Diamond', 1)
+
+P2 : [(9, 'Spade', 1), (9, 'Club', 1), (4, 'Spade', 1), (9, 'Heart', 1)] -> (9, 'Heart', 1)
+============DIFFERENCE=============== (4, 'Spade', 1)
+P3 : [(6, 'Spade', 1), (4, 'Diamond', 1), (10, 'Diamond', 2), (7, 'Heart', 1)] -> (6, 'Spade', 1)
+P4 : [(11, 'Spade', 6), (10, 'Diamond', 3), (2, 'Diamond', 1), (8, 'Diamond', 1)] -> (2, 'Diamond', 1)
+============DIFFERENCE=============== (11, 'Spade', 6)
+
+P2 : [(11, 'Spade', 6), (10, 'Club', 4), (4, 'Diamond', 1), (5, 'Spade', 1)] -> (4, 'Diamond', 1)
+P3 : [(3, 'Heart', 1), (5, 'Diamond', 1), (10, 'Club', 5), (10, 'Heart', 3)] -> (5, 'Diamond', 1)
+P4 : [(2, 'Heart', 1), (7, 'Heart', 1), (10, 'Diamond', 4), (10, 'Spade', 4)] -> (2, 'Heart', 1)
+
+P2 : [(10, 'Club', 4), (8, 'Diamond', 1), (9, 'Club', 1), (5, 'Club', 1)] -> (8, 'Diamond', 1)
+P3 : [(3, 'Spade', 1), (4, 'Club', 1), (10, 'Club', 5), (2, 'Heart', 1)] -> (2, 'Heart', 1)
+P4 : [(10, 'Spade', 3), (10, 'Diamond', 4), (10, 'Club', 2), (3, 'Heart', 1)] -> (3, 'Heart', 1)
+
+P2 : [(10, 'Club', 2), (10, 'Club', 5), (9, 'Diamond', 1), (9, 'Heart', 1)] -> (9, 'Heart', 1)
+P3 : [(11, 'Club', 6), (10, 'Diamond', 2), (10, 'Heart', 2), (2, 'Club', 1)] -> (10, 'Diamond', 2)
+P4 : [(10, 'Spade', 3), (11, 'Heart', 6), (2, 'Spade', 1), (2, 'Club', 1)] -> (2, 'Club', 1)
+
+P2 : [(8, 'Diamond', 1), (10, 'Spade', 3), (8, 'Spade', 1), (4, 'Heart', 1)] -> (4, 'Heart', 1)
+P3 : [(2, 'Diamond', 1), (11, 'Diamond', 6), (2, 'Spade', 1), (6, 'Spade', 1)] -> (2, 'Spade', 1)
+P4 : [(10, 'Club', 5), (11, 'Spade', 6), (5, 'Diamond', 1), (10, 'Heart', 3)] -> (5, 'Diamond', 1)
+
+P2 : [(6, 'Heart', 1), (10, 'Spade', 5), (10, 'Heart', 3), (10, 'Diamond', 5)] -> (10, 'Spade', 5)
+============DIFFERENCE=============== (10, 'Diamond', 5)
+P3 : [(7, 'Diamond', 1), (10, 'Club', 2), (11, 'Diamond', 6), (10, 'Diamond', 5)] -> (10, 'Club', 2)
+P4 : [(10, 'Club', 3), (4, 'Heart', 1), (4, 'Club', 1), (10, 'Spade', 3)] -> (4, 'Heart', 1)
+
+P2 : [(5, 'Diamond', 1), (9, 'Spade', 1), (6, 'Diamond', 1), (10, 'Club', 3)] -> (5, 'Diamond', 1)
+============DIFFERENCE=============== (9, 'Spade', 1)
+P3 : [(9, 'Diamond', 1), (11, 'Spade', 6), (8, 'Heart', 1), (10, 'Club', 3)] -> (8, 'Heart', 1)
+P4 : [(3, 'Heart', 1), (4, 'Diamond', 1), (8, 'Club', 1), (10, 'Club', 3)] -> (3, 'Heart', 1)
+
+P2 : [(10, 'Club', 2), (5, 'Diamond', 1), (8, 'Diamond', 1), (10, 'Club', 4)] -> (5, 'Diamond', 1)
+P3 : [(11, 'Heart', 6), (6, 'Club', 1), (6, 'Spade', 1), (7, 'Club', 1)] -> (6, 'Spade', 1)
+P4 : [(10, 'Spade', 4), (6, 'Heart', 1), (10, 'Diamond', 3), (7, 'Spade', 1)] -> (6, 'Heart', 1)
+
+P2 : [(2, 'Spade', 1), (9, 'Heart', 1), (5, 'Heart', 1), (10, 'Club', 5)] -> (2, 'Spade', 1)
+P3 : [(8, 'Spade', 1), (9, 'Club', 1), (10, 'Spade', 4), (10, 'Club', 5)] -> (9, 'Club', 1)
+============DIFFERENCE=============== (8, 'Spade', 1)
+P4 : [(10, 'Diamond', 2), (3, 'Club', 1), (10, 'Heart', 2), (10, 'Club', 5)] -> (10, 'Diamond', 2)
+
+P2 : [(9, 'Club', 1), (3, 'Spade', 1), (5, 'Club', 1), (5, 'Diamond', 1)] -> (3, 'Spade', 1)
+P3 : [(4, 'Club', 1), (2, 'Heart', 1), (3, 'Heart', 1), (10, 'Club', 4)] -> (2, 'Heart', 1)
+P4 : [(10, 'Heart', 3), (9, 'Spade', 1), (10, 'Spade', 4), (4, 'Heart', 1)] -> (4, 'Heart', 1)
+
+P2 : [(8, 'Club', 1), (7, 'Spade', 1), (2, 'Heart', 1), (6, 'Spade', 1)] -> (2, 'Heart', 1)
+P3 : [(4, 'Club', 1), (11, 'Diamond', 6), (10, 'Heart', 5), (6, 'Spade', 1)] -> (4, 'Club', 1)
+P4 : [(6, 'Club', 1), (5, 'Spade', 1), (8, 'Heart', 1), (6, 'Spade', 1)] -> (5, 'Spade', 1)
+============DIFFERENCE=============== (6, 'Club', 1)
+
+P2 : [(8, 'Diamond', 1), (10, 'Heart', 5), (10, 'Club', 3), (9, 'Club', 1)] -> (8, 'Diamond', 1)
+P3 : [(6, 'Spade', 1), (6, 'Club', 1), (7, 'Heart', 1), (9, 'Club', 1)] -> (6, 'Spade', 1)
+P4 : [(10, 'Spade', 5), (11, 'Diamond', 6), (10, 'Club', 4), (9, 'Club', 1)] -> (10, 'Spade', 5)
+
+P2 : [(10, 'Club', 2), (4, 'Spade', 1), (5, 'Diamond', 1), (7, 'Heart', 1)] -> (5, 'Diamond', 1)
+============DIFFERENCE=============== (4, 'Spade', 1)
+P3 : [(10, 'Spade', 3), (3, 'Club', 1), (5, 'Club', 1), (7, 'Heart', 1)] -> (7, 'Heart', 1)
+============DIFFERENCE=============== (3, 'Club', 1)
+P4 : [(9, 'Diamond', 1), (5, 'Heart', 1), (3, 'Diamond', 1), (10, 'Heart', 3)] -> (3, 'Diamond', 1)
+
+P2 : [(11, 'Diamond', 6), (10, 'Heart', 3), (9, 'Club', 1), (9, 'Heart', 1)] -> (10, 'Heart', 3)
+============DIFFERENCE=============== (9, 'Club', 1)
+P3 : [(7, 'Spade', 1), (2, 'Heart', 1), (4, 'Diamond', 1), (9, 'Heart', 1)] -> (4, 'Diamond', 1)
+P4 : [(11, 'Club', 6), (2, 'Spade', 1), (3, 'Diamond', 1), (9, 'Heart', 1)] -> (2, 'Spade', 1)
+
+P2 : [(7, 'Club', 1), (10, 'Diamond', 5), (3, 'Club', 1), (10, 'Spade', 2)] -> (10, 'Diamond', 5)
+============DIFFERENCE=============== (3, 'Club', 1)
+P3 : [(10, 'Spade', 5), (9, 'Club', 1), (2, 'Club', 1), (10, 'Spade', 2)] -> (2, 'Club', 1)
+P4 : [(9, 'Spade', 1), (9, 'Heart', 1), (10, 'Heart', 5), (10, 'Spade', 3)] -> (9, 'Heart', 1)
+============DIFFERENCE=============== (9, 'Spade', 1)
+
+P2 : [(9, 'Heart', 1), (9, 'Spade', 1), (10, 'Heart', 3), (6, 'Club', 1)] -> (6, 'Club', 1)
+P3 : [(5, 'Diamond', 1), (2, 'Spade', 1), (10, 'Club', 3), (10, 'Spade', 3)] -> (2, 'Spade', 1)
+============DIFFERENCE=============== (5, 'Diamond', 1)
+P4 : [(11, 'Spade', 6), (3, 'Spade', 1), (10, 'Heart', 4), (10, 'Spade', 3)] -> (10, 'Heart', 4)
+
+P2 : [(8, 'Diamond', 1), (8, 'Spade', 1), (7, 'Heart', 1), (11, 'Heart', 6)] -> (7, 'Heart', 1)
+============DIFFERENCE=============== (8, 'Diamond', 1)
+P3 : [(6, 'Club', 1), (7, 'Spade', 1), (10, 'Club', 3), (11, 'Heart', 6)] -> (7, 'Spade', 1)
+P4 : [(10, 'Heart', 5), (10, 'Club', 4), (7, 'Diamond', 1), (2, 'Diamond', 1)] -> (2, 'Diamond', 1)
+
+P2 : [(10, 'Spade', 5), (10, 'Spade', 2), (3, 'Heart', 1), (6, 'Spade', 1)] -> (3, 'Heart', 1)
+P3 : [(11, 'Heart', 6), (5, 'Diamond', 1), (9, 'Club', 1), (10, 'Heart', 3)] -> (5, 'Diamond', 1)
+P4 : [(10, 'Club', 2), (8, 'Diamond', 1), (9, 'Heart', 1), (10, 'Heart', 3)] -> (9, 'Heart', 1)
+============DIFFERENCE=============== (8, 'Diamond', 1)
+
+P2 : [(10, 'Diamond', 2), (3, 'Spade', 1), (6, 'Heart', 1), (8, 'Heart', 1)] -> (3, 'Spade', 1)
+P3 : [(10, 'Diamond', 3), (10, 'Club', 2), (6, 'Spade', 1), (8, 'Heart', 1)] -> (6, 'Spade', 1)
+P4 : [(6, 'Diamond', 1), (5, 'Club', 1), (10, 'Spade', 2), (4, 'Spade', 1)] -> (5, 'Club', 1)
+
+P2 : [(10, 'Heart', 4), (8, 'Diamond', 1), (5, 'Diamond', 1), (4, 'Club', 1)] -> (10, 'Heart', 4)
+============DIFFERENCE=============== (4, 'Club', 1)
+P3 : [(2, 'Heart', 1), (8, 'Heart', 1), (8, 'Spade', 1), (4, 'Club', 1)] -> (8, 'Spade', 1)
+============DIFFERENCE=============== (4, 'Club', 1)
+P4 : [(9, 'Heart', 1), (11, 'Spade', 6), (10, 'Club', 5), (4, 'Club', 1)] -> (9, 'Heart', 1)
+
+P2 : [(2, 'Club', 1), (7, 'Heart', 1), (3, 'Club', 1), (10, 'Heart', 3)] -> (2, 'Club', 1)
+P3 : [(10, 'Diamond', 3), (10, 'Diamond', 2), (4, 'Club', 1), (6, 'Club', 1)] -> (4, 'Club', 1)
+P4 : [(11, 'Heart', 6), (10, 'Spade', 3), (8, 'Club', 1), (7, 'Diamond', 1)] -> (10, 'Spade', 3)
+============DIFFERENCE=============== (7, 'Diamond', 1)
+
+P2 : [(10, 'Diamond', 5), (4, 'Diamond', 1), (11, 'Spade', 6), (10, 'Club', 5)] -> (10, 'Club', 5)
+P3 : [(6, 'Heart', 1), (4, 'Club', 1), (4, 'Spade', 1), (8, 'Club', 1)] -> (4, 'Spade', 1)
+P4 : [(10, 'Spade', 4), (7, 'Club', 1), (8, 'Spade', 1), (8, 'Club', 1)] -> (7, 'Club', 1)
+
+P2 : [(10, 'Spade', 2), (4, 'Heart', 1), (2, 'Club', 1), (10, 'Diamond', 2)] -> (2, 'Club', 1)
+P3 : [(4, 'Club', 1), (10, 'Heart', 2), (2, 'Diamond', 1), (9, 'Diamond', 1)] -> (4, 'Club', 1)
+P4 : [(11, 'Diamond', 6), (9, 'Spade', 1), (8, 'Spade', 1), (10, 'Spade', 4)] -> (11, 'Diamond', 6)
+
+P2 : [(2, 'Heart', 1), (10, 'Heart', 3), (10, 'Spade', 5), (9, 'Club', 1)] -> (9, 'Club', 1)
+P3 : [(6, 'Diamond', 1), (10, 'Diamond', 3), (3, 'Spade', 1), (10, 'Club', 4)] -> (3, 'Spade', 1)
+P4 : [(11, 'Spade', 6), (4, 'Heart', 1), (5, 'Diamond', 1), (10, 'Heart', 5)] -> (4, 'Heart', 1)
+============DIFFERENCE=============== (5, 'Diamond', 1)
+
+P2 : [(7, 'Club', 1), (10, 'Diamond', 5), (5, 'Diamond', 1), (8, 'Diamond', 1)] -> (7, 'Club', 1)
+P3 : [(10, 'Club', 5), (10, 'Diamond', 2), (10, 'Spade', 3), (9, 'Club', 1)] -> (10, 'Club', 5)
+============DIFFERENCE=============== (10, 'Diamond', 2)
+P4 : [(4, 'Diamond', 1), (7, 'Heart', 1), (7, 'Spade', 1), (9, 'Club', 1)] -> (4, 'Diamond', 1)
+
+P2 : [(4, 'Club', 1), (6, 'Diamond', 1), (6, 'Club', 1), (9, 'Diamond', 1)] -> (6, 'Diamond', 1)
+============DIFFERENCE=============== (4, 'Club', 1)
+P3 : [(10, 'Diamond', 4), (11, 'Diamond', 6), (2, 'Spade', 1), (9, 'Diamond', 1)] -> (2, 'Spade', 1)
+P4 : [(7, 'Club', 1), (4, 'Diamond', 1), (3, 'Heart', 1), (9, 'Diamond', 1)] -> (3, 'Heart', 1)
+
+P2 : [(4, 'Club', 1), (4, 'Diamond', 1), (6, 'Diamond', 1), (6, 'Heart', 1)] -> (4, 'Club', 1)
+P3 : [(9, 'Heart', 1), (8, 'Heart', 1), (6, 'Club', 1), (3, 'Spade', 1)] -> (3, 'Spade', 1)
+P4 : [(10, 'Club', 5), (10, 'Club', 2), (11, 'Diamond', 6), (10, 'Diamond', 3)] -> (10, 'Club', 5)
+
+P2 : [(6, 'Heart', 1), (6, 'Diamond', 1), (7, 'Diamond', 1), (10, 'Heart', 3)] -> (6, 'Diamond', 1)
+P3 : [(11, 'Heart', 6), (5, 'Diamond', 1), (5, 'Heart', 1), (10, 'Diamond', 4)] -> (5, 'Diamond', 1)
+P4 : [(10, 'Diamond', 3), (3, 'Club', 1), (4, 'Diamond', 1), (10, 'Spade', 2)] -> (3, 'Club', 1)
+
+P2 : [(9, 'Heart', 1), (6, 'Heart', 1), (10, 'Diamond', 5), (2, 'Spade', 1)] -> (2, 'Spade', 1)
+P3 : [(3, 'Heart', 1), (8, 'Diamond', 1), (10, 'Heart', 5), (10, 'Heart', 3)] -> (8, 'Diamond', 1)
+P4 : [(3, 'Diamond', 1), (6, 'Diamond', 1), (11, 'Spade', 6), (7, 'Club', 1)] -> (11, 'Spade', 6)
+============DIFFERENCE=============== (3, 'Diamond', 1)
+
+P2 : [(9, 'Diamond', 1), (8, 'Heart', 1), (6, 'Heart', 1), (4, 'Heart', 1)] -> (9, 'Diamond', 1)
+P3 : [(11, 'Spade', 6), (10, 'Diamond', 4), (5, 'Diamond', 1), (5, 'Spade', 1)] -> (11, 'Spade', 6)
+============DIFFERENCE=============== (5, 'Diamond', 1)
+P4 : [(10, 'Club', 3), (6, 'Club', 1), (8, 'Club', 1), (5, 'Spade', 1)] -> (5, 'Spade', 1)
+
+P2 : [(10, 'Club', 4), (10, 'Club', 2), (5, 'Diamond', 1), (10, 'Diamond', 3)] -> (5, 'Diamond', 1)
+P3 : [(4, 'Club', 1), (4, 'Heart', 1), (6, 'Diamond', 1), (10, 'Diamond', 3)] -> (4, 'Heart', 1)
+============DIFFERENCE=============== (4, 'Club', 1)
+P4 : [(9, 'Club', 1), (10, 'Spade', 4), (2, 'Heart', 1), (10, 'Diamond', 3)] -> (2, 'Heart', 1)
+
+P2 : [(9, 'Heart', 1), (9, 'Diamond', 1), (5, 'Heart', 1), (11, 'Spade', 6)] -> (9, 'Diamond', 1)
+P3 : [(11, 'Diamond', 6), (10, 'Heart', 5), (5, 'Spade', 1), (2, 'Spade', 1)] -> (5, 'Spade', 1)
+============DIFFERENCE=============== (2, 'Spade', 1)
+P4 : [(10, 'Spade', 3), (3, 'Diamond', 1), (9, 'Club', 1), (2, 'Spade', 1)] -> (3, 'Diamond', 1)
+
+P2 : [(7, 'Heart', 1), (10, 'Club', 2), (2, 'Spade', 1), (4, 'Club', 1)] -> (2, 'Spade', 1)
+P3 : [(6, 'Heart', 1), (9, 'Heart', 1), (2, 'Diamond', 1), (4, 'Spade', 1)] -> (2, 'Diamond', 1)
+P4 : [(8, 'Club', 1), (5, 'Club', 1), (7, 'Diamond', 1), (6, 'Spade', 1)] -> (6, 'Spade', 1)
+
+P2 : [(8, 'Spade', 1), (10, 'Diamond', 2), (5, 'Diamond', 1), (10, 'Club', 5)] -> (5, 'Diamond', 1)
+============DIFFERENCE=============== (8, 'Spade', 1)
+P3 : [(6, 'Diamond', 1), (7, 'Heart', 1), (10, 'Diamond', 3), (10, 'Club', 5)] -> (7, 'Heart', 1)
+P4 : [(11, 'Diamond', 6), (3, 'Spade', 1), (3, 'Heart', 1), (10, 'Club', 5)] -> (3, 'Spade', 1)
+
+P2 : [(11, 'Club', 6), (4, 'Heart', 1), (9, 'Club', 1), (10, 'Heart', 3)] -> (4, 'Heart', 1)
+P3 : [(9, 'Heart', 1), (10, 'Spade', 5), (10, 'Club', 2), (10, 'Heart', 5)] -> (9, 'Heart', 1)
+============DIFFERENCE=============== (10, 'Spade', 5)
+P4 : [(10, 'Diamond', 5), (3, 'Diamond', 1), (9, 'Diamond', 1), (10, 'Heart', 5)] -> (10, 'Heart', 5)
+
+P2 : [(10, 'Heart', 3), (7, 'Heart', 1), (6, 'Heart', 1), (2, 'Spade', 1)] -> (2, 'Spade', 1)
+P3 : [(7, 'Spade', 1), (3, 'Diamond', 1), (7, 'Club', 1), (7, 'Diamond', 1)] -> (3, 'Diamond', 1)
+P4 : [(4, 'Club', 1), (5, 'Heart', 1), (2, 'Diamond', 1), (7, 'Diamond', 1)] -> (4, 'Club', 1)
+
+P2 : [(10, 'Diamond', 2), (6, 'Diamond', 1), (7, 'Spade', 1), (8, 'Club', 1)] -> (7, 'Spade', 1)
+P3 : [(3, 'Spade', 1), (11, 'Heart', 6), (4, 'Diamond', 1), (7, 'Club', 1)] -> (3, 'Spade', 1)
+P4 : [(6, 'Spade', 1), (4, 'Spade', 1), (10, 'Club', 5), (10, 'Spade', 5)] -> (10, 'Club', 5)
+
+P2 : [(8, 'Club', 1), (10, 'Spade', 3), (11, 'Spade', 6), (7, 'Club', 1)] -> (7, 'Club', 1)
+P3 : [(2, 'Diamond', 1), (10, 'Club', 2), (11, 'Club', 6), (11, 'Heart', 6)] -> (2, 'Diamond', 1)
+P4 : [(9, 'Spade', 1), (10, 'Club', 5), (4, 'Spade', 1), (11, 'Heart', 6)] -> (10, 'Club', 5)
+
+P2 : [(4, 'Club', 1), (5, 'Diamond', 1), (5, 'Spade', 1), (10, 'Diamond', 5)] -> (4, 'Club', 1)
+P3 : [(7, 'Heart', 1), (8, 'Heart', 1), (10, 'Heart', 5), (10, 'Diamond', 5)] -> (10, 'Diamond', 5)
+P4 : [(2, 'Club', 1), (10, 'Diamond', 3), (2, 'Heart', 1), (8, 'Diamond', 1)] -> (2, 'Club', 1)
+
+P2 : [(10, 'Heart', 3), (5, 'Spade', 1), (9, 'Club', 1), (11, 'Club', 6)] -> (9, 'Club', 1)
+============DIFFERENCE=============== (5, 'Spade', 1)
+P3 : [(10, 'Diamond', 2), (2, 'Club', 1), (10, 'Club', 3), (11, 'Club', 6)] -> (10, 'Diamond', 2)
+P4 : [(7, 'Diamond', 1), (3, 'Heart', 1), (7, 'Heart', 1), (11, 'Club', 6)] -> (3, 'Heart', 1)
+
+P2 : [(10, 'Diamond', 4), (7, 'Heart', 1), (8, 'Diamond', 1), (2, 'Diamond', 1)] -> (7, 'Heart', 1)
+P3 : [(9, 'Spade', 1), (10, 'Club', 4), (10, 'Spade', 4), (2, 'Diamond', 1)] -> (2, 'Diamond', 1)
+P4 : [(7, 'Diamond', 1), (8, 'Club', 1), (4, 'Diamond', 1), (2, 'Club', 1)] -> (8, 'Club', 1)
+============DIFFERENCE=============== (2, 'Club', 1)
+
+P2 : [(10, 'Diamond', 5), (4, 'Club', 1), (10, 'Spade', 2), (11, 'Spade', 6)] -> (4, 'Club', 1)
+P3 : [(10, 'Club', 4), (10, 'Heart', 4), (10, 'Heart', 3), (11, 'Spade', 6)] -> (10, 'Club', 4)
+P4 : [(10, 'Spade', 4), (6, 'Diamond', 1), (10, 'Diamond', 2), (4, 'Diamond', 1)] -> (10, 'Spade', 4)
+
+P2 : [(7, 'Club', 1), (6, 'Spade', 1), (10, 'Club', 4), (10, 'Heart', 3)] -> (6, 'Spade', 1)
+P3 : [(3, 'Diamond', 1), (4, 'Heart', 1), (2, 'Club', 1), (5, 'Diamond', 1)] -> (2, 'Club', 1)
+P4 : [(10, 'Diamond', 4), (7, 'Heart', 1), (10, 'Spade', 4), (5, 'Diamond', 1)] -> (7, 'Heart', 1)
+
+P2 : [(7, 'Heart', 1), (5, 'Spade', 1), (2, 'Spade', 1), (4, 'Spade', 1)] -> (7, 'Heart', 1)
+P3 : [(4, 'Heart', 1), (10, 'Club', 3), (8, 'Spade', 1), (4, 'Spade', 1)] -> (4, 'Heart', 1)
+P4 : [(10, 'Club', 4), (11, 'Club', 6), (10, 'Diamond', 4), (4, 'Spade', 1)] -> (4, 'Spade', 1)
+
+P2 : [(5, 'Club', 1), (10, 'Diamond', 2), (8, 'Spade', 1), (5, 'Spade', 1)] -> (5, 'Club', 1)
+P3 : [(4, 'Spade', 1), (9, 'Heart', 1), (3, 'Spade', 1), (5, 'Spade', 1)] -> (9, 'Heart', 1)
+P4 : [(4, 'Diamond', 1), (5, 'Heart', 1), (10, 'Heart', 2), (7, 'Diamond', 1)] -> (4, 'Diamond', 1)
+
+P2 : [(9, 'Heart', 1), (3, 'Heart', 1), (3, 'Diamond', 1), (4, 'Diamond', 1)] -> (3, 'Diamond', 1)
+P3 : [(10, 'Spade', 5), (11, 'Spade', 6), (8, 'Club', 1), (10, 'Heart', 5)] -> (8, 'Club', 1)
+P4 : [(6, 'Club', 1), (6, 'Heart', 1), (10, 'Club', 5), (10, 'Club', 3)] -> (6, 'Heart', 1)
+
+P2 : [(6, 'Diamond', 1), (3, 'Club', 1), (3, 'Heart', 1), (8, 'Spade', 1)] -> (3, 'Club', 1)
+P3 : [(7, 'Heart', 1), (6, 'Heart', 1), (10, 'Heart', 4), (8, 'Spade', 1)] -> (8, 'Spade', 1)
+P4 : [(6, 'Spade', 1), (7, 'Diamond', 1), (10, 'Spade', 3), (2, 'Diamond', 1)] -> (7, 'Diamond', 1)
+============DIFFERENCE=============== (2, 'Diamond', 1)
+
+P2 : [(4, 'Heart', 1), (10, 'Club', 5), (6, 'Heart', 1), (6, 'Club', 1)] -> (4, 'Heart', 1)
+P3 : [(3, 'Heart', 1), (11, 'Club', 6), (3, 'Diamond', 1), (6, 'Club', 1)] -> (3, 'Heart', 1)
+P4 : [(9, 'Heart', 1), (5, 'Spade', 1), (7, 'Heart', 1), (7, 'Diamond', 1)] -> (5, 'Spade', 1)
+
+P2 : [(7, 'Heart', 1), (11, 'Diamond', 6), (10, 'Heart', 5), (11, 'Heart', 6)] -> (11, 'Diamond', 6)
+P3 : [(4, 'Club', 1), (2, 'Diamond', 1), (7, 'Spade', 1), (11, 'Heart', 6)] -> (4, 'Club', 1)
+============DIFFERENCE=============== (2, 'Diamond', 1)
+P4 : [(6, 'Diamond', 1), (3, 'Diamond', 1), (10, 'Club', 3), (11, 'Heart', 6)] -> (3, 'Diamond', 1)
+
+P2 : [(4, 'Spade', 1), (6, 'Heart', 1), (10, 'Heart', 2), (10, 'Club', 4)] -> (4, 'Spade', 1)
+P3 : [(10, 'Diamond', 4), (10, 'Heart', 3), (9, 'Club', 1), (10, 'Club', 4)] -> (10, 'Heart', 3)
+============DIFFERENCE=============== (10, 'Diamond', 4)
+P4 : [(9, 'Heart', 1), (5, 'Spade', 1), (7, 'Diamond', 1), (11, 'Club', 6)] -> (5, 'Spade', 1)
+
+P2 : [(4, 'Spade', 1), (10, 'Heart', 3), (8, 'Diamond', 1), (5, 'Spade', 1)] -> (4, 'Spade', 1)
+P3 : [(10, 'Spade', 2), (9, 'Club', 1), (6, 'Diamond', 1), (2, 'Diamond', 1)] -> (6, 'Diamond', 1)
+============DIFFERENCE=============== (2, 'Diamond', 1)
+P4 : [(2, 'Club', 1), (8, 'Club', 1), (9, 'Heart', 1), (2, 'Diamond', 1)] -> (2, 'Diamond', 1)
+
+P2 : [(7, 'Spade', 1), (10, 'Heart', 5), (10, 'Diamond', 2), (10, 'Diamond', 3)] -> (7, 'Spade', 1)
+P3 : [(10, 'Spade', 4), (11, 'Diamond', 6), (9, 'Diamond', 1), (10, 'Diamond', 3)] -> (10, 'Spade', 4)
+P4 : [(8, 'Spade', 1), (2, 'Diamond', 1), (10, 'Spade', 3), (10, 'Club', 5)] -> (2, 'Diamond', 1)
+
+P2 : [(10, 'Club', 4), (7, 'Club', 1), (10, 'Heart', 3), (10, 'Spade', 3)] -> (10, 'Spade', 3)
+P3 : [(10, 'Heart', 5), (10, 'Spade', 5), (7, 'Diamond', 1), (10, 'Spade', 4)] -> (7, 'Diamond', 1)
+P4 : [(10, 'Diamond', 5), (6, 'Spade', 1), (10, 'Club', 5), (10, 'Spade', 4)] -> (6, 'Spade', 1)
+============DIFFERENCE=============== (10, 'Diamond', 5)
+
+P2 : [(4, 'Diamond', 1), (10, 'Diamond', 4), (6, 'Club', 1), (10, 'Diamond', 3)] -> (6, 'Club', 1)
+P3 : [(10, 'Heart', 5), (10, 'Club', 5), (5, 'Heart', 1), (9, 'Diamond', 1)] -> (5, 'Heart', 1)
+============DIFFERENCE=============== (9, 'Diamond', 1)
+P4 : [(8, 'Diamond', 1), (10, 'Club', 2), (2, 'Club', 1), (9, 'Diamond', 1)] -> (2, 'Club', 1)
+
+P2 : [(2, 'Club', 1), (11, 'Spade', 6), (11, 'Heart', 6), (10, 'Heart', 2)] -> (2, 'Club', 1)
+P3 : [(6, 'Diamond', 1), (10, 'Club', 2), (7, 'Club', 1), (2, 'Heart', 1)] -> (6, 'Diamond', 1)
+============DIFFERENCE=============== (2, 'Heart', 1)
+P4 : [(8, 'Spade', 1), (5, 'Spade', 1), (10, 'Club', 4), (2, 'Heart', 1)] -> (2, 'Heart', 1)
+
+P2 : [(4, 'Club', 1), (9, 'Club', 1), (3, 'Heart', 1), (10, 'Heart', 2)] -> (3, 'Heart', 1)
+P3 : [(7, 'Club', 1), (2, 'Diamond', 1), (10, 'Diamond', 2), (8, 'Diamond', 1)] -> (7, 'Club', 1)
+P4 : [(4, 'Diamond', 1), (11, 'Diamond', 6), (10, 'Spade', 4), (10, 'Spade', 5)] -> (4, 'Diamond', 1)
+
+P2 : [(2, 'Spade', 1), (11, 'Heart', 6), (11, 'Diamond', 6), (9, 'Heart', 1)] -> (2, 'Spade', 1)
+P3 : [(10, 'Heart', 2), (9, 'Diamond', 1), (11, 'Club', 6), (9, 'Heart', 1)] -> (9, 'Diamond', 1)
+P4 : [(4, 'Spade', 1), (3, 'Heart', 1), (6, 'Heart', 1), (8, 'Diamond', 1)] -> (3, 'Heart', 1)
+============DIFFERENCE=============== (4, 'Spade', 1)
+
+P2 : [(11, 'Diamond', 6), (7, 'Diamond', 1), (5, 'Club', 1), (11, 'Club', 6)] -> (5, 'Club', 1)
+P3 : [(8, 'Heart', 1), (7, 'Spade', 1), (4, 'Heart', 1), (3, 'Club', 1)] -> (3, 'Club', 1)
+P4 : [(4, 'Spade', 1), (7, 'Heart', 1), (9, 'Heart', 1), (10, 'Spade', 5)] -> (4, 'Spade', 1)
+
+P2 : [(10, 'Club', 3), (4, 'Heart', 1), (10, 'Diamond', 5), (10, 'Spade', 3)] -> (4, 'Heart', 1)
+P3 : [(5, 'Diamond', 1), (7, 'Heart', 1), (3, 'Diamond', 1), (6, 'Club', 1)] -> (3, 'Diamond', 1)
+============DIFFERENCE=============== (6, 'Club', 1)
+P4 : [(10, 'Heart', 4), (4, 'Diamond', 1), (11, 'Heart', 6), (6, 'Club', 1)] -> (4, 'Diamond', 1)
+
+P2 : [(2, 'Club', 1), (4, 'Heart', 1), (5, 'Club', 1), (9, 'Heart', 1)] -> (2, 'Club', 1)
+P3 : [(6, 'Spade', 1), (4, 'Club', 1), (2, 'Heart', 1), (10, 'Diamond', 5)] -> (2, 'Heart', 1)
+P4 : [(6, 'Heart', 1), (11, 'Heart', 6), (10, 'Club', 3), (3, 'Club', 1)] -> (10, 'Club', 3)
+============DIFFERENCE=============== (3, 'Club', 1)
+
+P2 : [(11, 'Spade', 6), (10, 'Club', 3), (9, 'Spade', 1), (10, 'Club', 2)] -> (10, 'Club', 3)
+============DIFFERENCE=============== (9, 'Spade', 1)
+P3 : [(10, 'Diamond', 3), (9, 'Diamond', 1), (8, 'Diamond', 1), (10, 'Club', 2)] -> (10, 'Club', 2)
+P4 : [(4, 'Heart', 1), (10, 'Spade', 2), (6, 'Club', 1), (7, 'Heart', 1)] -> (4, 'Heart', 1)
+============DIFFERENCE=============== (6, 'Club', 1)
+
+P2 : [(3, 'Heart', 1), (2, 'Heart', 1), (5, 'Club', 1), (9, 'Club', 1)] -> (2, 'Heart', 1)
+P3 : [(8, 'Heart', 1), (10, 'Spade', 5), (10, 'Heart', 5), (9, 'Club', 1)] -> (10, 'Spade', 5)
+============DIFFERENCE=============== (9, 'Club', 1)
+P4 : [(10, 'Club', 5), (7, 'Heart', 1), (2, 'Spade', 1), (9, 'Club', 1)] -> (7, 'Heart', 1)
+============DIFFERENCE=============== (2, 'Spade', 1)
+
+P2 : [(4, 'Diamond', 1), (10, 'Diamond', 2), (2, 'Spade', 1), (7, 'Diamond', 1)] -> (2, 'Spade', 1)
+P3 : [(3, 'Diamond', 1), (6, 'Spade', 1), (8, 'Spade', 1), (7, 'Diamond', 1)] -> (3, 'Diamond', 1)
+P4 : [(10, 'Diamond', 4), (10, 'Diamond', 3), (11, 'Club', 6), (7, 'Diamond', 1)] -> (11, 'Club', 6)
+
+P2 : [(6, 'Diamond', 1), (7, 'Spade', 1), (3, 'Club', 1), (10, 'Diamond', 4)] -> (6, 'Diamond', 1)
+============DIFFERENCE=============== (3, 'Club', 1)
+P3 : [(10, 'Heart', 4), (6, 'Heart', 1), (2, 'Heart', 1), (10, 'Diamond', 4)] -> (10, 'Diamond', 4)
+P4 : [(3, 'Diamond', 1), (5, 'Spade', 1), (10, 'Heart', 5), (4, 'Heart', 1)] -> (3, 'Diamond', 1)
+
+P2 : [(2, 'Diamond', 1), (8, 'Diamond', 1), (7, 'Club', 1), (11, 'Diamond', 6)] -> (2, 'Diamond', 1)
+============DIFFERENCE=============== (7, 'Club', 1)
+P3 : [(10, 'Spade', 3), (7, 'Heart', 1), (5, 'Spade', 1), (11, 'Diamond', 6)] -> (7, 'Heart', 1)
+P4 : [(10, 'Spade', 5), (7, 'Spade', 1), (10, 'Diamond', 2), (6, 'Diamond', 1)] -> (6, 'Diamond', 1)
+
+P2 : [(2, 'Club', 1), (8, 'Diamond', 1), (10, 'Heart', 4), (3, 'Diamond', 1)] -> (2, 'Club', 1)
+P3 : [(9, 'Spade', 1), (2, 'Diamond', 1), (10, 'Club', 3), (7, 'Heart', 1)] -> (2, 'Diamond', 1)
+P4 : [(10, 'Club', 5), (5, 'Heart', 1), (6, 'Diamond', 1), (7, 'Heart', 1)] -> (6, 'Diamond', 1)
+
+P2 : [(3, 'Diamond', 1), (10, 'Spade', 2), (3, 'Spade', 1), (8, 'Club', 1)] -> (3, 'Diamond', 1)
+P3 : [(8, 'Diamond', 1), (8, 'Spade', 1), (3, 'Heart', 1), (8, 'Club', 1)] -> (3, 'Heart', 1)
+P4 : [(10, 'Spade', 3), (9, 'Heart', 1), (7, 'Club', 1), (8, 'Club', 1)] -> (7, 'Club', 1)
+============DIFFERENCE=============== (9, 'Heart', 1)
+
+P2 : [(9, 'Spade', 1), (6, 'Heart', 1), (10, 'Spade', 4), (7, 'Club', 1)] -> (6, 'Heart', 1)
+P3 : [(10, 'Club', 2), (2, 'Diamond', 1), (7, 'Diamond', 1), (9, 'Diamond', 1)] -> (10, 'Club', 2)
+P4 : [(6, 'Club', 1), (9, 'Heart', 1), (10, 'Heart', 5), (10, 'Club', 5)] -> (6, 'Club', 1)
+
+P2 : [(9, 'Heart', 1), (5, 'Heart', 1), (2, 'Spade', 1), (10, 'Heart', 2)] -> (2, 'Spade', 1)
+P3 : [(7, 'Diamond', 1), (10, 'Club', 2), (10, 'Heart', 5), (9, 'Club', 1)] -> (7, 'Diamond', 1)
+P4 : [(5, 'Club', 1), (10, 'Club', 4), (3, 'Spade', 1), (11, 'Club', 6)] -> (3, 'Spade', 1)
+
+P2 : [(10, 'Spade', 3), (11, 'Club', 6), (10, 'Club', 3), (2, 'Heart', 1)] -> (2, 'Heart', 1)
+P3 : [(10, 'Diamond', 3), (11, 'Diamond', 6), (10, 'Club', 2), (9, 'Diamond', 1)] -> (10, 'Club', 2)
+P4 : [(7, 'Club', 1), (10, 'Diamond', 4), (5, 'Heart', 1), (7, 'Diamond', 1)] -> (5, 'Heart', 1)
+
+P2 : [(10, 'Heart', 2), (3, 'Club', 1), (10, 'Club', 2), (7, 'Club', 1)] -> (10, 'Heart', 2)
+P3 : [(2, 'Club', 1), (11, 'Diamond', 6), (10, 'Heart', 5), (5, 'Heart', 1)] -> (2, 'Club', 1)
+P4 : [(9, 'Spade', 1), (10, 'Club', 5), (2, 'Diamond', 1), (5, 'Heart', 1)] -> (2, 'Diamond', 1)
+
+P2 : [(10, 'Diamond', 5), (10, 'Diamond', 4), (10, 'Heart', 2), (11, 'Spade', 6)] -> (10, 'Heart', 2)
+P3 : [(6, 'Diamond', 1), (9, 'Club', 1), (2, 'Diamond', 1), (9, 'Heart', 1)] -> (2, 'Diamond', 1)
+P4 : [(2, 'Club', 1), (6, 'Spade', 1), (7, 'Diamond', 1), (9, 'Heart', 1)] -> (2, 'Club', 1)
+
+P2 : [(10, 'Club', 4), (3, 'Heart', 1), (5, 'Diamond', 1), (2, 'Club', 1)] -> (3, 'Heart', 1)
+P3 : [(10, 'Heart', 3), (2, 'Spade', 1), (3, 'Spade', 1), (10, 'Heart', 4)] -> (2, 'Spade', 1)
+P4 : [(10, 'Diamond', 2), (5, 'Heart', 1), (8, 'Heart', 1), (10, 'Heart', 4)] -> (10, 'Diamond', 2)
+

@@ -1,0 +1,30 @@
+4 Spade
+6 Heart
+3 Diamond
+10 Diamond
+5 Spade
+9 Diamond
+7 Heart
+10 Diamond --
+11 Club --
+2 Spade
+5 Spade
+5 Club
+6 Diamond
+3 Diamond
+9 Heart
+9 Club
+7 Heart
+8 Spade
+2 Diamond
+5 Club
+6 Diamond
+9 Diamond
+11 Spade
+4 Club
+4 Diamond
+3 Spade
+10 Diamond
+2 Spade
+5 Club
+10 Diamond
