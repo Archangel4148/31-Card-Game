@@ -1,0 +1,42 @@
+Deck: [(5, 'Club', 1), (10, 'Club', 2), (11, 'Diamond', 6), (10, 'Heart', 2), (6, 'Spade', 1), (3, 'Spade', 1), (10, 'Club', 3), (10, 'Spade', 2), (2, 'Spade', 1), (8, 'Spade', 1), (7, 'Club', 1), (3, 'Heart', 1), (4, 'Spade', 1), (11, 'Club', 6), (5, 'Diamond', 1), (10, 'Heart', 3), (10, 'Diamond', 2), (9, 'Spade', 1), (9, 'Club', 1), (6, 'Heart', 1), (4, 'Heart', 1), (10, 'Diamond', 3), (3, 'Diamond', 1), (6, 'Club', 1), (11, 'Heart', 6), (10, 'Spade', 3), (10, 'Diamond', 4), (10, 'Spade', 4), (5, 'Spade', 1), (7, 'Heart', 1), (6, 'Diamond', 1), (7, 'Diamond', 1), (4, 'Club', 1), (8, 'Heart', 1), (11, 'Spade', 6), (2, 'Club', 1), (3, 'Club', 1), (10, 'Heart', 4), (10, 'Club', 4), (8, 'Club', 1), (2, 'Heart', 1), (9, 'Diamond', 1), (7, 'Spade', 1), (2, 'Diamond', 1), (10, 'Spade', 5), (4, 'Diamond', 1), (10, 'Heart', 5), (9, 'Heart', 1), (8, 'Diamond', 1), (10, 'Club', 5), (5, 'Heart', 1), (10, 'Diamond', 5)]
+
+[(11, 'Diamond', 6), (10, 'Diamond', 2), (4, 'Club', 1)]         (4, 'Spade', 1)     4 Spade
+[(7, 'Diamond', 1), (10, 'Spade', 3), (6, 'Heart', 1)]         (4, 'Diamond', 1)     6 Heart
+[(6, 'Diamond', 1), (3, 'Diamond', 1), (10, 'Heart', 4)]       (4, 'Diamond', 1)     3 Diamond
+
+[(6, 'Spade', 1), (10, 'Diamond', 2), (10, 'Spade', 2)]          (8, 'Spade', 1)     10 Diamond
+[(7, 'Diamond', 1), (5, 'Spade', 1), (6, 'Diamond', 1)]         (10, 'Heart', 4)     5 Spade
+[(9, 'Diamond', 1), (11, 'Heart', 6), (11, 'Club', 6)]          (10, 'Heart', 4)     9 Diamond
+
+[(6, 'Club', 1), (7, 'Club', 1), (7, 'Spade', 1)]                (7, 'Heart', 1)     7 Heart
+[(6, 'Heart', 1), (10, 'Diamond', 2), (10, 'Club', 4)]           (8, 'Spade', 1)     6 Heart
+[(11, 'Club', 6), (2, 'Diamond', 1), (11, 'Diamond', 6)]         (8, 'Spade', 1)     8 Spade
+
+[(2, 'Spade', 1), (6, 'Club', 1), (10, 'Club', 4)]               (5, 'Spade', 1)     2 Spade
+[(6, 'Diamond', 1), (2, 'Heart', 1), (5, 'Heart', 1)]            (5, 'Spade', 1)     5 Spade
+[(6, 'Spade', 1), (10, 'Heart', 5), (5, 'Club', 1)]             (10, 'Heart', 2)     5 Club
+
+[(10, 'Heart', 5), (10, 'Spade', 3), (6, 'Diamond', 1)]        (3, 'Diamond', 1)     6 Diamond
+[(8, 'Spade', 1), (3, 'Spade', 1), (6, 'Spade', 1)]            (3, 'Diamond', 1)     3 Diamond
+[(10, 'Club', 2), (9, 'Heart', 1), (2, 'Club', 1)]                (8, 'Club', 1)     9 Heart
+
+[(3, 'Diamond', 1), (10, 'Spade', 5), (9, 'Diamond', 1)]          (9, 'Club', 1)     9 Club
+[(8, 'Heart', 1), (10, 'Club', 2), (7, 'Heart', 1)]              (8, 'Spade', 1)     7 Heart
+[(10, 'Heart', 3), (10, 'Heart', 5), (10, 'Heart', 2)]           (8, 'Spade', 1)     8 Spade
+
+[(7, 'Diamond', 1), (10, 'Diamond', 2), (11, 'Diamond', 6)]    (2, 'Diamond', 1)     2 Diamond
+[(5, 'Club', 1), (8, 'Spade', 1), (7, 'Spade', 1)]               (6, 'Spade', 1)     5 Club
+[(10, 'Heart', 4), (6, 'Diamond', 1), (6, 'Club', 1)]             (8, 'Club', 1)     6 Diamond
+
+[(9, 'Diamond', 1), (10, 'Heart', 2), (6, 'Spade', 1)]            (8, 'Club', 1)     9 Diamond
+[(11, 'Spade', 6), (10, 'Club', 3), (6, 'Club', 1)]               (8, 'Club', 1)     11 Spade
+[(10, 'Heart', 4), (9, 'Heart', 1), (4, 'Club', 1)]            (7, 'Diamond', 1)     4 Club
+
+[(2, 'Spade', 1), (4, 'Spade', 1), (4, 'Diamond', 1)]         (10, 'Diamond', 3)     4 Diamond
+[(11, 'Diamond', 6), (3, 'Spade', 1), (8, 'Diamond', 1)]      (10, 'Diamond', 3)     3 Spade
+[(10, 'Heart', 3), (4, 'Club', 1), (11, 'Club', 6)]           (10, 'Diamond', 3)     10 Diamond
+
+[(9, 'Spade', 1), (2, 'Spade', 1), (3, 'Heart', 1)]             (10, 'Heart', 3)     2 Spade
+[(2, 'Diamond', 1), (5, 'Club', 1), (10, 'Diamond', 3)]          (8, 'Heart', 1)     5 Club
+[(4, 'Club', 1), (10, 'Diamond', 5), (10, 'Club', 4)]           (10, 'Heart', 5)     10 Diamond
+

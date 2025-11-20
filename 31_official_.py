@@ -22,6 +22,9 @@ TO USE THIS CODE:
 import dataclasses
 import typing
 
+DEBUG_TO_FILE = True
+FILENAME = "debug.txt"
+
 """
 ASSUMPTIONS:
     - If there is any positive point differential available, the player 
@@ -63,10 +66,61 @@ class GameState:
     def get_card_index(self, card: Card):
         return self.deck.index(card)
 
+
+def find_best_discard(hand: list[Card], draw: Card) -> tuple[float, Card]:
+    all_cards = [draw] + hand
+    tie_break_order = all_cards[:]  # identical ordering
+
+    # Generate 3-card combos (discard j)
+    combos = [[all_cards[i] for i in range(4) if i != j] for j in range(4)]
+
+    # Score all combos
+    valued_combos = [(get_hand_value(combo), combo) for combo in combos]
+
+    # Step 1: highest value
+    max_value = max(v for v, _ in valued_combos)
+
+    # Step 2: all combos that reach that value
+    best_combos = [c for (v, c) in valued_combos if v == max_value]
+
+    if len(best_combos) == 1:
+        best_combo = best_combos[0]
+    else:
+        # discard from each tied combo
+        def discard_for_combo(combo):
+            return next(c for c in all_cards if c not in combo)
+
+        # tie-break rule: lowest rank, then earliest in ordering
+        def discard_key(card):
+            return (card[0], tie_break_order.index(card))
+
+        best_combo = min(best_combos, key=lambda combo: discard_key(discard_for_combo(combo)))
+
+    # final discard
+    discard_card = next(c for c in all_cards if c not in best_combo)
+
+    return max_value, discard_card
+
+
 def increment_turn_variables(game_state: GameState, hand_value: float, discarded_card: Card, deck_draw: bool):
     """Increment turn tracking variables after the player takes/discards a card"""
     game_state.upcard_index = game_state.get_card_index(discarded_card)
     game_state.player_scores[game_state.current_player_idx] = hand_value
+
+
+    hand = game_state.deck[game_state.player_hand_idx:game_state.player_hand_idx+3]
+    draw = game_state.deck[-1 - game_state.deck_draws]
+    if DEBUG_TO_FILE:
+        # _, estimate_discard = find_best_discard(hand, draw)
+        with open(FILENAME , "a") as f:
+            cards_str = repr(hand + [draw])
+            f.write(f"{repr(hand):<60}{repr(draw):>20}     {discarded_card[0]} {discarded_card[1]}\n")
+            # f.write(f"P{game_state.current_player} : {hand + [draw]} -> {discarded_card}\n")
+            # if estimate_discard != discarded_card:
+            #     f.write(f"============DIFFERENCE=============== {estimate_discard}\n")
+            if game_state.current_player == 4:
+                f.write("\n")
+
     game_state.current_player += 1
     if deck_draw:
         game_state.deck_draws += 1
@@ -79,10 +133,10 @@ def get_lowest_card(cards: list[Card]) -> Card:
 
 def get_hand_value(cards: list[Card]) -> float:
     """Get the value of a hand, accounting for matching suits and three-of-a-kinds"""
-    values = [card[0] for card in cards]
+    equality_pairs = [(card[0], card[2]) for card in cards]
 
     # Three of a kind
-    if values[0] == values[1] == values[2]:
+    if equality_pairs[0] == equality_pairs[1] == equality_pairs[2]:
         return 30.5
 
     suit_groups = {}
@@ -103,23 +157,24 @@ def draw_card_no_shared_suits(game_state: GameState):  # add 3 of a kind
     c3 = game_state.deck[game_state.player_hand_idx + 2]
 
     value_groups = [c1[0], c2[0], c3[0], drawn_val]
+    max_val = max(value_groups)
 
     # If the drawn card matches suit with card 1:
-    if drawn_suit == c1[1] and (drawn_val + c1[0]) > max(value_groups):
+    if drawn_suit == c1[1] and (drawn_val + c1[0]) > max_val:
         # If the drawn card and card 1 combined are the highest value:
         hand_value = drawn_val + (c1[0])
         # Discard the lowest of the two non-matching cards
         discard_card = get_lowest_card([c2, c3])
 
     # If the drawn card matches suit with card 2:
-    elif drawn_suit == c2[1] and (drawn_val + c2[0]) > max(value_groups):
+    elif drawn_suit == c2[1] and (drawn_val + c2[0]) > max_val:
         # If the drawn card and card 2 combined are the maximum value:
         hand_value = drawn_val + (c2[0])
         # Discard the lowest of the two non-matching cards
         discard_card = get_lowest_card([c1, c3])
 
     # If the drawn card matches suit with card 3:
-    elif drawn_suit == c3[1] and (drawn_val + c3[0]) > max(value_groups):
+    elif drawn_suit == c3[1] and (drawn_val + c3[0]) > max_val:
         # If the drawn card and card 3 combined are the maximum value:
         hand_value = drawn_val + (c3[0])
         # Discard the lowest of the two non-matching cards
@@ -127,7 +182,7 @@ def draw_card_no_shared_suits(game_state: GameState):  # add 3 of a kind
 
     # If the card matches no suits, or if the combination isn't the maximum value:
     else:
-        hand_value = max(value_groups)
+        hand_value = max_val
         # Discard the lowest card
         discard_card = get_lowest_card([c1, c2, c3, drawn])
 
@@ -148,11 +203,12 @@ def draw_card_1_2_share_suits(game_state: GameState):
     # If the drawn card shares no suits:
     if drawn_suit != c1[1] and drawn_suit != c3[1]:
         hand_value = max(value_groups)
+        min_val = min(value_groups)
 
-        if drawn_val == min(value_groups):
+        if drawn_val == min_val:
             # Discard the drawn card
             discard_card = drawn
-        elif c3[0] == min(value_groups):
+        elif c3[0] == min_val:
             # Discard card 3
             discard_card = c3
         else:
@@ -167,12 +223,10 @@ def draw_card_1_2_share_suits(game_state: GameState):
         if drawn_val + c3[0] > c1[0] + c2[0]:
             # Discard the lesser of cards 1 and 2
             discard_card = get_lowest_card([c1, c2])
-
         # If the drawn card and card 3 combined are less than cards 1 and 2 combined
         elif drawn_val + c3[0] < c1[0] + c2[0]:
             # Discard the lesser of the drawn card and card 3
             discard_card = get_lowest_card([drawn, c3])
-
         # If the combination of the drawn card and card 3 is equal to the combination of cards 1 and 2:
         else:
             # Discard the lowest card
@@ -186,7 +240,6 @@ def draw_card_1_2_share_suits(game_state: GameState):
         if drawn_val + c1[0] + c2[0] > c3[0]:
             # Discard card 3
             discard_card = c3
-
         # If the drawn card, card 1, and card 2 combined are NOT the maximum value:
         else:
             # Discard the least of cards 1, 2, and the drawn card
@@ -209,13 +262,14 @@ def draw_card_1_3_share_suits(game_state: GameState):
     # If the drawn card shares no suits:
     if drawn_suit != c2[1] and drawn_suit != c3[1]:
         hand_value = max(value_groups)
+        min_val = min(value_groups)
 
         # If the drawn card is the minimum value:
-        if drawn_val == min(value_groups):
+        if drawn_val == min_val:
             # Discard the drawn card
             discard_card = drawn
         # If card 2 is the minimum value:
-        elif c2[0] == min(value_groups):
+        elif c2[0] == min_val:
             # Discard card 2
             discard_card = c2
         # If cards 1 and 3 combined are the minimum value:
@@ -230,17 +284,14 @@ def draw_card_1_3_share_suits(game_state: GameState):
         if drawn_val + c2[0] > c1[0] + c3[0]:
             # Discard the lesser of cards 1 and 3
             discard_card = get_lowest_card([c1, c3])
-
         # If the combination of the drawn card and card 2 is less than the combination of cards 1 and 3:
         elif drawn_val + c2[0] < c1[0] + c3[0]:
             # Discard the lesser of card 2 and the drawn card
             discard_card = get_lowest_card([drawn, c2])
-
         # If the combination of the drawn card and card 2 is equal to the combination of cards 1 and 3:
         else:
             # Discard the lowest card
             discard_card = get_lowest_card([drawn, c2, c1, c3])
-
 
     # If the drawn card shares a suit with cards 1 and 3:
     else:
@@ -249,7 +300,6 @@ def draw_card_1_3_share_suits(game_state: GameState):
         if drawn_val + c1[0] + c3[0] > c2[0]:
             # Discard card 2
             discard_card = c2
-
         # If the combination of cards 1, 3, and the drawn card is less than the value of card 2:
         else:
             # Discard the least of cards 1, 3, and the drawn card
@@ -272,12 +322,13 @@ def draw_card_2_3_share_suits(game_state: GameState):
     # If the drawn card shares no suits:
     if drawn_suit != c1[1] and drawn_suit != c3[1]:
         hand_value = max(value_groups)
+        min_val = min(value_groups)
         # If the drawn card is the lowest value:
-        if drawn_val == min(value_groups):
+        if drawn_val == min_val:
             # Discard the drawn card
             discard_card = drawn
         # If card 1 is the lowest value:
-        elif c1[0] == min(value_groups):
+        elif c1[0] == min_val:
             # Discard card 1
             discard_card = c1
         # If cards 2 and 3 combined are the lowest value:
@@ -349,20 +400,24 @@ def main():
     total_scores = []
     welford_accumulation = (0, 0, 0)
 
+    _deck = [
+        (5, "Club", 1), (10, "Club", 2), (11, "Diamond", 6), (10, "Heart", 2), (6, "Spade", 1), (3, "Spade", 1),
+        (10, "Club", 3), (10, "Spade", 2), (2, "Spade", 1), (8, "Spade", 1), (7, "Club", 1), (3, "Heart", 1),
+        (4, "Spade", 1), (11, "Club", 6), (5, "Diamond", 1), (10, "Heart", 3), (10, "Diamond", 2), (9, "Spade", 1),
+        (9, "Club", 1), (6, "Heart", 1), (4, "Heart", 1), (10, "Diamond", 3), (3, "Diamond", 1), (6, "Club", 1),
+        (11, "Heart", 6), (10, "Spade", 3), (10, "Diamond", 4), (10, "Spade", 4), (5, "Spade", 1), (7, "Heart", 1),
+        (6, "Diamond", 1), (7, "Diamond", 1), (4, "Club", 1), (8, "Heart", 1), (11, "Spade", 6), (2, "Club", 1),
+        (3, "Club", 1), (10, "Heart", 4), (10, "Club", 4), (8, "Club", 1), (2, "Heart", 1), (9, "Diamond", 1),
+        (7, "Spade", 1), (2, "Diamond", 1), (10, "Spade", 5), (4, "Diamond", 1), (10, "Heart", 5), (9, "Heart", 1),
+        (8, "Diamond", 1), (10, "Club", 5), (5, "Heart", 1), (10, "Diamond", 5)
+    ]
+    if DEBUG_TO_FILE:
+        with open(FILENAME, "w") as f:
+            f.write(f"Deck: {repr(_deck)}\n\n")
+
     for turn in range(iterations):
         # Types: 1 = number, 2 = 10, 3 = jack, 4 = queen, 5 = king, 6 = ace
         # Each item: (Value, Suit, Type)
-        _deck = [
-            (5, "Club", 1), (10, "Club", 2), (11, "Diamond", 6), (10, "Heart", 2), (6, "Spade", 1), (3, "Spade", 1),
-            (10, "Club", 3), (10, "Spade", 2), (2, "Spade", 1), (8, "Spade", 1), (7, "Club", 1), (3, "Heart", 1),
-            (4, "Spade", 1), (11, "Club", 6), (5, "Diamond", 1), (10, "Heart", 3), (10, "Diamond", 2), (9, "Spade", 1),
-            (9, "Club", 1), (6, "Heart", 1), (4, "Heart", 1), (10, "Diamond", 3), (3, "Diamond", 1), (6, "Club", 1),
-            (11, "Heart", 6), (10, "Spade", 3), (10, "Diamond", 4), (10, "Spade", 4), (5, "Spade", 1), (7, "Heart", 1),
-            (6, "Diamond", 1), (7, "Diamond", 1), (4, "Club", 1), (8, "Heart", 1), (11, "Spade", 6), (2, "Club", 1),
-            (3, "Club", 1), (10, "Heart", 4), (10, "Club", 4), (8, "Club", 1), (2, "Heart", 1), (9, "Diamond", 1),
-            (7, "Spade", 1), (2, "Diamond", 1), (10, "Spade", 5), (4, "Diamond", 1), (10, "Heart", 5), (9, "Heart", 1),
-            (8, "Diamond", 1), (10, "Club", 5), (5, "Heart", 1), (10, "Diamond", 5)
-        ]
         random.seed(turn)
 
         game_state = GameState(
